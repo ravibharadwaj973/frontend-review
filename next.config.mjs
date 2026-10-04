@@ -7,8 +7,15 @@
  * to the backend, so no CORS setup is needed in the browser.
  * API_URL and NEXT_PUBLIC_API_URL are accepted as aliases. Read at build time.
  */
-const raw = process.env.BACKEND_URL || process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || '';
-const BACKEND_URL = (raw || 'http://localhost:4000').trim().replace(/\/+$/, '');
+const raw = (process.env.BACKEND_URL || process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || '').trim();
+let BACKEND_URL = (raw || 'http://localhost:4000').replace(/\/+$/, '');
+// Only the origin is used: "https://api.x.in/api/health" or "https://api.x.in/api" become "https://api.x.in"
+try {
+  BACKEND_URL = new URL(BACKEND_URL).origin;
+} catch {
+  /* checked below */
+}
+console.log(`[starling] Forwarding /api and /uploads to ${BACKEND_URL}`);
 
 if (!raw && (process.env.VERCEL || process.env.NODE_ENV === 'production') && process.env.npm_lifecycle_event === 'build') {
   // Fail loudly instead of deploying a site that can't reach its API
