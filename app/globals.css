@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sheen: linear-gradient(115deg, #6d4cf0 0%, #2f6fed 35%, #22b8cf 65%, #6d4cf0 100%);
+  color-scheme: light;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  @apply bg-mist text-ink font-sans antialiased;
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+h1, h2, h3, .font-display { font-family: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.02em; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+:focus-visible { outline: 2px solid #2F6FED; outline-offset: 2px; border-radius: 6px; }
+
+/* ---- AI sheen: reserved for anything Starling's AI wrote that still needs a human ---- */
+.ai-sheen {
+  position: relative;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    var(--sheen) border-box;
+  background-size: 100% 100%, 200% 200%;
+  animation: sheen-border 8s linear infinite;
+}
+@keyframes sheen-border { 0% { background-position: 0 0, 0% 50%; } 100% { background-position: 0 0, 200% 50%; } }
+.ai-sheen-text {
+  background: var(--sheen);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen 8s linear infinite;
+}
+.ai-dot { background: var(--sheen); background-size: 200% 200%; animation: sheen 6s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* Scrollbars in panels */
+.thin-scroll { scrollbar-width: thin; scrollbar-color: #CBD5E3 transparent; }
+
+@layer components {
+/* Inputs */
+.field {
+  @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-[15px] text-ink placeholder:text-ink-faint
+         transition-colors focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100;
+}
+textarea.field { @apply leading-relaxed; }
+select.field { @apply pr-8; }
+
+.label { @apply mb-1.5 block text-sm font-medium text-ink-soft; }
+.hint { @apply mt-1 text-xs text-ink-muted; }
+
+/* Skeleton shimmer */
+.skeleton { @apply rounded-md bg-line-soft; background-image: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent); background-size: 200% 100%; animation: sheen 1.4s linear infinite; }
+}
