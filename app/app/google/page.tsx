@@ -126,7 +126,7 @@ function SyncTable({ onChanged }: { onChanged: () => void }) {
   const [busy, setBusy] = useState('');
   if (!data) return <Skeleton className="h-64" />;
   const demo = data.mode === 'demo';
-  const profileKeys = ['name', 'phone', 'website', 'description', 'hours'];
+  const profileKeys = ['name', 'phone', 'website', 'description', 'hours', 'specialHours'];
 
   const push = async (keys: string[]) => {
     const profile = keys.filter((k) => profileKeys.includes(k));

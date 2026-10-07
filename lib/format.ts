@@ -40,3 +40,36 @@ export const hours = (h?: number | null) => {
 export function cx(...parts: (string | false | null | undefined)[]) {
   return parts.filter(Boolean).join(' ');
 }
+
+/** "Wed 7 Oct, 3:40 pm" */
+export const dayTime = (date?: string | Date | null) =>
+  date ? new Date(date).toLocaleString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '—';
+
+/** "Today", "Tomorrow", "Fri 9 Oct" */
+export function relDay(date?: string | Date | null) {
+  if (!date) return '—';
+  const d = new Date(date);
+  const start = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const diff = Math.round((start(d) - start(new Date())) / 864e5);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Tomorrow';
+  if (diff === -1) return 'Yesterday';
+  return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
+export const clock = (date?: string | Date | null) =>
+  date ? new Date(date).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' }) : '';
+
+/** "YYYY-MM-DD" → "Tue 20 Oct" without timezone surprises */
+export const ymdLabel = (ymd: string, opts: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'short' }) => {
+  const [y, m, d] = ymd.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-IN', opts);
+};
+
+/** "today at 3:40 pm", "tomorrow at 11:00 am", "on Fri 9 Oct at 4:10 pm" */
+export function when(date?: string | Date | null) {
+  if (!date) return '';
+  const r = relDay(date);
+  const day = r === 'Today' || r === 'Tomorrow' || r === 'Yesterday' ? r.toLowerCase() : `on ${r}`;
+  return `${day} at ${clock(date)}`;
+}

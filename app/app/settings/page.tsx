@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Sparkles } from 'lucide-react';
@@ -83,8 +84,14 @@ export default function SettingsPage() {
           <Panel title="Automation">
             <div className="divide-y divide-line-soft">
               <Toggle checked={automation.autoAnalyze !== false} onChange={(v) => setAutomation({ ...automation, autoAnalyze: v })} label="Analyse new reviews" description="Sentiment, services and issues for every review as it arrives." />
-              <Toggle checked={automation.autoDraftReplies !== false} onChange={(v) => setAutomation({ ...automation, autoDraftReplies: v })} label="Draft replies automatically" description="A draft waits for your approval — nothing is posted." />
-              <Toggle checked={!!automation.autoPublishFiveStar} onChange={(v) => setAutomation({ ...automation, autoPublishFiveStar: v })} label="Auto-publish replies to 5-star reviews" description="Only for clearly positive 5-star reviews. Everything else always waits for you." />
+              <Toggle checked={automation.autoDraftReplies !== false} onChange={(v) => setAutomation({ ...automation, autoDraftReplies: v })} label="Draft replies automatically" description="AI writes a reply for every new review. Your reply rules decide which ones post by themselves." />
+              <div className="flex items-start justify-between gap-6 py-3">
+                <span>
+                  <span className="block text-[15px] font-medium text-ink">Post AI replies automatically</span>
+                  <span className="mt-0.5 block text-sm text-ink-muted">Choose by star rating which replies post by themselves and which wait for you.</span>
+                </span>
+                <Link href="/app/autopilot" className="shrink-0 text-sm font-medium text-brand-600 hover:underline">Reply rules →</Link>
+              </div>
             </div>
             <Field className="mt-3" label="Suggest asking for a review after" hint="Customers appear under “Ready to ask” once this time has passed since their visit">
               <Select value={String(automation.requestDelayHours ?? 2)} onChange={(e) => setAutomation({ ...automation, requestDelayHours: Number(e.target.value) })}>

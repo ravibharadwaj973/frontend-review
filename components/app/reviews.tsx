@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Check, CornerDownRight, RefreshCw, Sparkles, Trash2, Wand2, X, UserRound } from 'lucide-react';
+import { Check, Clock, CornerDownRight, Hand, RefreshCw, Sparkles, Trash2, Wand2, X, UserRound } from 'lucide-react';
 import { AiMark, Avatar, Badge, Button, Select, Stars, Textarea, useToast } from '@/components/ui';
 import { api } from '@/lib/api';
-import { cx, shortDate, timeAgo } from '@/lib/format';
+import { clock, cx, relDay, shortDate, timeAgo, when } from '@/lib/format';
 import { TONES } from '@/lib/constants';
 
 export type Review = {
@@ -23,7 +23,7 @@ export type Review = {
     sentiment?: string; services?: string[]; positives?: string[]; negatives?: string[]; concerns?: string[];
     keywords?: string[]; urgency?: string; recommendation?: string; model?: string;
   };
-  draft?: { _id: string; text: string; finalText?: string; status: string; model?: string } | null;
+  draft?: { _id: string; text: string; finalText?: string; status: string; model?: string; autoPublishAt?: string } | null;
   customer?: { _id: string; name: string } | string;
 };
 
@@ -31,6 +31,7 @@ export const sentimentTone = (s?: string) => (s === 'positive' ? 'good' : s === 
 
 export function StatusPill({ review }: { review: Review }) {
   if (review.status === 'answered') return <Badge tone="good"><Check className="h-3 w-3" />Replied</Badge>;
+  if (review.draft?.autoPublishAt) return <Badge tone="info"><Clock className="h-3 w-3" />AI reply posts {relDay(review.draft.autoPublishAt) === 'Today' ? clock(review.draft.autoPublishAt) : `${relDay(review.draft.autoPublishAt)} ${clock(review.draft.autoPublishAt)}`}</Badge>;
   if (review.status === 'drafted' || review.draft) return <Badge tone="ai"><Sparkles className="h-3 w-3" />Draft ready</Badge>;
   return <Badge tone={review.rating <= 2 ? 'bad' : 'neutral'}>Needs reply</Badge>;
 }
@@ -110,8 +111,32 @@ export function ReplyComposer({ review, onChanged, compact }: { review: Review; 
   const [text, setText] = useState(review.draft?.finalText || review.draft?.text || '');
   const [tone, setTone] = useState('');
   const [instruction, setInstruction] = useState('');
-  const [busy, setBusy] = useState<'' | 'draft' | 'publish'>('');
+  const [busy, setBusy] = useState<'' | 'draft' | 'publish' | 'hold'>('');
   const edited = draft && text !== draft.text;
+
+  const hold = async () => {
+    if (!draft) return;
+    setBusy('hold');
+    try {
+      const res = await api(`/reviews/${review._id}/draft/${draft._id}/hold`, { method: 'POST' });
+      setDraft(res.draft);
+      toast('Held — this reply now waits for you');
+      onChanged();
+    } catch (e: any) {
+      toast(e.message, 'bad');
+    } finally {
+      setBusy('');
+    }
+  };
+  // Keep an edited auto-reply: save the edit so the automatic post uses it
+  const saveEdit = async () => {
+    if (!draft || !edited) return;
+    try {
+      await api(`/reviews/${review._id}/draft/${draft._id}`, { method: 'PATCH', body: { text } });
+    } catch {
+      /* ignore — publishing still uses the text box */
+    }
+  };
 
   useEffect(() => {
     setDraft(review.draft || null);
@@ -160,11 +185,18 @@ export function ReplyComposer({ review, onChanged, compact }: { review: Review; 
 
   return (
     <div className={cx('rounded-xl p-4', draft && !edited ? 'ai-sheen' : 'border border-line bg-white')}>
+      {draft?.autoPublishAt && (
+        <div className="-mx-1 -mt-1 mb-3 flex flex-wrap items-center gap-2 rounded-lg bg-brand-50 px-3 py-2 text-[13px] text-brand-700">
+          <Clock className="h-3.5 w-3.5" />
+          <span className="flex-1">Autopilot posts this reply {when(draft.autoPublishAt)}. Edit it, post it now, or hold it.</span>
+          <Button size="sm" variant="secondary" className="h-7" onClick={hold} loading={busy === 'hold'} icon={<Hand className="h-3.5 w-3.5" />}>Hold</Button>
+        </div>
+      )}
       <div className="mb-2 flex items-center justify-between gap-2">
         {draft && !edited ? <AiMark /> : <span className="text-xs font-semibold text-ink-soft">{draft ? 'Edited by you' : 'Your reply'}</span>}
         <span className="text-xs tabular text-ink-faint">{text.trim().length} / 4096</span>
       </div>
-      <Textarea value={text} onChange={(e) => setText(e.target.value)} rows={compact ? 4 : 6} className="border-0 bg-transparent px-0 focus:ring-0" aria-label="Reply text" />
+      <Textarea value={text} onChange={(e) => setText(e.target.value)} onBlur={saveEdit} rows={compact ? 4 : 6} className="border-0 bg-transparent px-0 focus:ring-0" aria-label="Reply text" />
       {!compact && (
         <div className="mt-3 flex flex-col gap-2 border-t border-line-soft pt-3 sm:flex-row">
           <input

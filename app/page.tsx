@@ -214,7 +214,7 @@ export default function Landing() {
           <ul className="grid gap-6 sm:grid-cols-3">
             <li><p className="font-display text-lg font-semibold">Customers stay the author</p><p className="mt-1.5 text-sm leading-relaxed text-brand-100">The writing helper only uses what the customer picks and types, including what could be better. They edit it and post it themselves.</p></li>
             <li><p className="font-display text-lg font-semibold">No gating</p><p className="mt-1.5 text-sm leading-relaxed text-brand-100">Every customer gets the same link, whatever their experience — as Google’s policies require.</p></li>
-            <li><p className="font-display text-lg font-semibold">You approve replies</p><p className="mt-1.5 text-sm leading-relaxed text-brand-100">AI drafts wait for you. Auto-publishing is off unless you turn it on for 5-star reviews.</p></li>
+            <li><p className="font-display text-lg font-semibold">You set the rules</p><p className="mt-1.5 text-sm leading-relaxed text-brand-100">Choose by star rating which AI replies post by themselves. Urgent or mixed reviews always wait for you, and you can hold any reply.</p></li>
           </ul>
         </div>
       </section>

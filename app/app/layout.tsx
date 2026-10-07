@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { BarChart3, Building2, Home, LogOut, Menu, MessageSquareText, QrCode, Send, Settings, Users, X, RefreshCw } from 'lucide-react';
+import { BarChart3, Building2, CalendarClock, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, QrCode, Send, Settings, Users, X, RefreshCw } from 'lucide-react';
 import { Logo } from '@/components/app/Logo';
 import { Avatar, Spinner } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
@@ -17,6 +17,11 @@ const NAV = [
   { href: '/app/share', label: 'QR code & sharing', icon: QrCode },
   { href: '/app/customers', label: 'Customers', icon: Users },
   { href: '/app/analytics', label: 'Analytics', icon: BarChart3 },
+  { section: 'Keep Google active' },
+  { href: '/app/autopilot', label: 'Autopilot', icon: CalendarClock },
+  { href: '/app/posts', label: 'Google posts', icon: Megaphone },
+  { href: '/app/photos', label: 'Weekly photos', icon: Images },
+  { href: '/app/questions', label: 'Customer questions', icon: HelpCircle },
   { section: 'Your presence' },
   { href: '/app/profile', label: 'Business profile', icon: Building2 },
   { href: '/app/google', label: 'Google profile', icon: RefreshCw },

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import useSWR from 'swr';
-import { ArrowUpRight, Check, Circle, RefreshCw, Send, Sparkles } from 'lucide-react';
+import { ArrowUpRight, CalendarClock, Check, Circle, Clock, Images, Megaphone, MessageSquareText, RefreshCw, Send, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { AiMark, Avatar, Button, Drawer, Panel, Skeleton, Stars, useToast } from '@/components/ui';
 import { MonthlyBars, RatingLine, RatingDistribution, TopicBalance, Funnel, SentimentStrip } from '@/components/charts';
@@ -11,7 +11,46 @@ import { ReviewDetail } from '@/components/app/reviews';
 import { QrCard } from '@/components/app/QrCard';
 import { useAuth } from '@/lib/auth';
 import { api } from '@/lib/api';
-import { cx, hours, num, timeAgo } from '@/lib/format';
+import { cx, hours, num, timeAgo, when } from '@/lib/format';
+
+function AutopilotCard() {
+  const { data } = useSWR('/autopilot', { refreshInterval: 120_000 });
+  if (!data) return <Skeleton className="h-56" />;
+  const s = data.settings;
+  const nextPhoto = data.week.flatMap((d: any) => d.photos)[0];
+  const nextPost = data.week.flatMap((d: any) => d.posts).find((p: any) => p.status !== 'published');
+  const unset = data.hours.unset?.[0];
+  const Row = ({ icon, children, href }: { icon: React.ReactNode; children: React.ReactNode; href: string }) => (
+    <li>
+      <Link href={href} className="flex items-start gap-3 rounded-lg px-2 py-2 text-sm hover:bg-mist">
+        <span className="mt-0.5 text-brand-500">{icon}</span>
+        <span className="flex-1 text-ink-soft">{children}</span>
+      </Link>
+    </li>
+  );
+  return (
+    <Panel title={<h2 className="flex items-center gap-2 font-display text-[17px] font-semibold"><CalendarClock className="h-[18px] w-[18px] text-brand-500" />Autopilot this week</h2>} action={<Link href="/app/autopilot" className="text-sm font-medium text-brand-600 hover:underline">Open</Link>}>
+      {!data.connection && <p className="-mt-1 mb-2 rounded-lg bg-brand-50 px-3 py-2 text-xs text-brand-700">Connect Google to switch autopilot on.</p>}
+      <ul className="-mx-2 -my-1">
+        <Row icon={<MessageSquareText className="h-4 w-4" />} href="/app/reviews?filter=unanswered">
+          {data.replies.auto ? <><span className="font-medium text-ink">{data.replies.auto}</span> AI repl{data.replies.auto === 1 ? 'y posts' : 'ies post'} by {data.replies.auto === 1 ? 'itself' : 'themselves'}</> : 'No replies waiting to post'}
+          {data.replies.waitingApproval > 0 && <> · <span className="font-medium text-amber">{data.replies.waitingApproval} need your OK</span></>}
+        </Row>
+        <Row icon={<Images className="h-4 w-4" />} href="/app/photos">
+          <span className="font-medium text-ink">{data.photos.postedThisWeek}/{s.photos.perWeek}</span> photos posted{nextPhoto ? <> · next {when(nextPhoto.scheduledFor)}</> : data.photos.queued === 0 && s.photos.perWeek ? <> · <span className="text-amber">queue is empty</span></> : null}
+        </Row>
+        <Row icon={<Megaphone className="h-4 w-4" />} href="/app/posts">
+          {data.posts.drafts ? <><span className="font-medium text-amber">{data.posts.drafts} post{data.posts.drafts > 1 ? 's' : ''}</span> waiting for your OK</> : nextPost ? <>Next post {when(nextPost.scheduledFor)}</> : <>{data.posts.publishedThisWeek} post{data.posts.publishedThisWeek === 1 ? '' : 's'} published this week</>}
+        </Row>
+        {unset && (
+          <Row icon={<Clock className="h-4 w-4" />} href="/app/profile?tab=hours">
+            <span className="font-medium text-amber">{unset.name}</span> is in {unset.daysAway} day{unset.daysAway === 1 ? '' : 's'} — set your hours
+          </Row>
+        )}
+      </ul>
+    </Panel>
+  );
+}
 
 function greeting() {
   const h = new Date().getHours();
@@ -160,6 +199,7 @@ export default function Dashboard() {
         </div>
 
         <div className="min-w-0 space-y-6">
+        <AutopilotCard />
         {/* Reply queue */}
         <Panel title="Needs your reply" action={<Link href="/app/reviews?filter=unanswered" className="text-sm font-medium text-brand-600 hover:underline">All</Link>} padded={false}>
           {data.needsReply.length === 0 ? (
