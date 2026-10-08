@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { BarChart3, Building2, CalendarClock, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, QrCode, Send, Settings, Users, X, RefreshCw } from 'lucide-react';
+import { BarChart3, Building2, CalendarClock, CreditCard, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, PauseCircle, QrCode, Send, Settings, Shield, Users, X, RefreshCw } from 'lucide-react';
+import { BillingView } from '@/components/app/BillingView';
 import { Logo } from '@/components/app/Logo';
 import { Avatar, Spinner } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
@@ -25,6 +26,7 @@ const NAV = [
   { section: 'Your presence' },
   { href: '/app/profile', label: 'Business profile', icon: Building2 },
   { href: '/app/google', label: 'Google profile', icon: RefreshCw },
+  { href: '/app/billing', label: 'Billing', icon: CreditCard },
   { href: '/app/settings', label: 'Settings', icon: Settings },
 ] as const;
 
@@ -89,8 +91,28 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
+/** Shown instead of the app while an admin has paused the account. */
+function PausedScreen() {
+  const { business, logout } = useAuth();
+  return (
+    <div className="min-h-screen bg-mist px-4 py-10 sm:px-8">
+      <div className="mx-auto max-w-[1100px]">
+        <div className="mb-8 flex items-center justify-between"><Logo /><button onClick={logout} className="text-sm font-medium text-ink-muted hover:text-brand-600">Sign out</button></div>
+        <div className="mb-8 flex flex-col gap-4 rounded-xl2 border border-rose/20 bg-white p-6 shadow-lift sm:flex-row sm:items-center">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-soft text-rose"><PauseCircle className="h-6 w-6" /></span>
+          <div>
+            <h1 className="font-display text-2xl font-semibold">{business?.name}’s account is paused</h1>
+            <p className="mt-1 text-[15px] text-ink-muted">{(business?.account?.suspendedReason || 'Contact us to continue').replace(/[.!]?$/, '.')} Your data is safe. Review replies, photos and posts are on hold, and your review page is offline until the account is active again.</p>
+          </div>
+        </div>
+        <BillingView />
+      </div>
+    </div>
+  );
+}
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, business, impersonatedBy, stopImpersonating, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -109,8 +131,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // e.g. an admin-only login: the business app needs a business
+  if (!business) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-6 text-center">
+        <Logo />
+        <h1 className="mt-4 font-display text-2xl font-semibold">No business on this account</h1>
+        <p className="max-w-sm text-ink-muted">{user.isAdmin ? 'This is an admin account. Use the Starling admin website to manage businesses.' : 'Sign up with a business to use Starling.'}</p>
+        <button onClick={logout} className="font-medium text-brand-600 hover:underline">Sign out</button>
+      </div>
+    );
+  }
+
+  if (business?.account?.status === 'suspended' && !impersonatedBy) return <PausedScreen />;
+
   return (
     <div className="min-h-screen overflow-x-clip lg:pl-[264px]">
+      {impersonatedBy && (
+        <div className="sticky top-0 z-40 flex flex-wrap items-center justify-center gap-3 bg-ink px-4 py-2 text-sm text-white">
+          <Shield className="h-4 w-4 text-brand-200" />
+          <span>Admin view — you’re inside <span className="font-semibold">{business?.name}</span>{business?.account?.status === 'suspended' ? ' (paused)' : ''}. Changes you make are saved to this account.</span>
+          <button onClick={stopImpersonating} className="rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-ink hover:bg-brand-50">Back to admin</button>
+        </div>
+      )}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[264px] lg:block">
         <Sidebar />
       </aside>

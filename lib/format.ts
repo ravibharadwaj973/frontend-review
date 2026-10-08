@@ -73,3 +73,7 @@ export function when(date?: string | Date | null) {
   const day = r === 'Today' || r === 'Tomorrow' || r === 'Yesterday' ? r.toLowerCase() : `on ${r}`;
   return `${day} at ${clock(date)}`;
 }
+
+/** ₹2,249.10 — keeps paise when there are any */
+export const rupees = (n?: number | null) =>
+  n == null ? '—' : new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: Number.isInteger(Math.round(n * 100) / 100) ? 0 : 2, maximumFractionDigits: 2 }).format(n);

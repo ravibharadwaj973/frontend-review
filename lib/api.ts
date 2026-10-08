@@ -50,8 +50,15 @@ export async function api<T = any>(path: string, opts: Options = {}): Promise<T>
   if (!res.ok) {
     if (res.status === 401 && token && typeof window !== 'undefined' && !path.startsWith('/auth/')) {
       setToken(null);
+      try {
+        window.localStorage.removeItem('starling.prevToken');
+        window.localStorage.removeItem('starling.adminReturn');
+      } catch {
+        /* ignore */
+      }
       window.location.href = '/login?expired=1';
     }
+    if (data?.code === 'account_suspended' && typeof window !== 'undefined') window.dispatchEvent(new Event('starling:account'));
     throw new ApiError(res.status, data?.error || `Request failed (${res.status})`, data?.details);
   }
   return data as T;
