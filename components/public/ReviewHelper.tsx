@@ -308,6 +308,7 @@ export function ReviewHelper({ base }: { base: string }) {
             Submit review
           </button>
           <p className="mt-2 text-center text-xs text-ink-muted">Goes straight to {info.business.name}. No login or app needed.</p>
+          <p className="mt-1 text-center text-[11px] text-ink-faint">By submitting you agree to our <a href="/terms" target="_blank" className="underline hover:text-brand-600">Terms</a> and <a href="/privacy-policy" target="_blank" className="underline hover:text-brand-600">Privacy Policy</a>.</p>
           </>
           )}
         </div>

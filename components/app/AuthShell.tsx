@@ -12,6 +12,10 @@ export function AuthShell({ title, subtitle, children, footer }: { title: string
           <p className="mt-2 text-[15px] text-ink-muted">{subtitle}</p>
           <div className="mt-8">{children}</div>
           <div className="mt-6 text-sm text-ink-muted">{footer}</div>
+          <p className="mt-10 flex gap-4 text-xs text-ink-faint">
+            <Link href="/privacy-policy" className="hover:text-brand-600">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-brand-600">Terms of Service</Link>
+          </p>
         </div>
       </div>
       <aside className="relative hidden overflow-hidden bg-brand-700 lg:block">

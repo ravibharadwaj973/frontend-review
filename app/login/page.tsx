@@ -15,6 +15,9 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  // Where to go after signing in (only pages inside the app)
+  const nextParam = params.get('next') || '';
+  const next = /^\/app(\/[A-Za-z0-9/_-]*)?$/.test(nextParam) ? nextParam : '/app';
 
   useEffect(() => {
     if (params.get('demo')) {
@@ -25,8 +28,8 @@ function LoginForm() {
   }, [params]);
 
   useEffect(() => {
-    if (!loading && user) router.replace('/app');
-  }, [loading, user, router]);
+    if (!loading && user) router.replace(next);
+  }, [loading, user, router, next]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +37,7 @@ function LoginForm() {
     setError('');
     try {
       await login(email, password);
-      router.push('/app');
+      router.push(next);
     } catch (err: any) {
       setError(err.message);
     } finally {

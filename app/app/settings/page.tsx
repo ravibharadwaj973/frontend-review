@@ -128,6 +128,10 @@ export default function SettingsPage() {
           <div className="mt-5 flex justify-end"><Button onClick={saveAccount} loading={busy === 'account'}>Update account</Button></div>
         </Panel>
       </div>
+      <p className="mt-8 flex gap-4 text-xs text-ink-muted">
+        <Link href="/privacy-policy" className="hover:text-brand-600">Privacy Policy</Link>
+        <Link href="/terms" className="hover:text-brand-600">Terms of Service</Link>
+      </p>
     </>
   );
 }

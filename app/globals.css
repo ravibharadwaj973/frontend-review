@@ -61,3 +61,11 @@ select.field { @apply pr-8; }
 /* Skeleton shimmer */
 .skeleton { @apply rounded-md bg-line-soft; background-image: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent); background-size: 200% 100%; animation: sheen 1.4s linear infinite; }
 }
+
+/* Privacy Policy and Terms pages */
+@layer components {
+  .legal ul { @apply list-disc space-y-1.5 pl-5; }
+  .legal a { @apply font-medium text-brand-600 hover:underline; }
+  .legal strong { @apply font-semibold text-ink; }
+  .legal h3 { @apply mt-5 font-semibold text-ink; }
+}

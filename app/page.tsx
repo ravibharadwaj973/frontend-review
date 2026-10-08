@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { LegalFooter } from '@/components/public/LegalPage';
 import { useEffect, useState } from 'react';
 import { Check, MessageCircle, RefreshCw, ShieldCheck, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/app/Logo';
@@ -219,12 +220,13 @@ export default function Landing() {
         </div>
       </section>
 
-      <footer className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-5 py-12 sm:flex-row sm:items-center">
+      <footer className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-5 pb-4 pt-12 sm:flex-row sm:items-center">
         <Logo />
         <div className="flex items-center gap-3">
           <Link href="/signup" className="inline-flex h-11 items-center rounded-xl bg-brand-600 px-5 text-sm font-medium text-white hover:bg-brand-700">Set up your business</Link>
         </div>
       </footer>
+      <LegalFooter className="max-w-6xl justify-start sm:justify-start" />
     </div>
   );
 }

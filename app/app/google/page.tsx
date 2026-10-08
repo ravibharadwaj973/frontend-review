@@ -38,7 +38,7 @@ function Connect({ googleConfigured, onDone }: { googleConfigured: boolean; onDo
   const connect = async () => {
     setBusy('live');
     try {
-      const { url } = await api('/google/oauth/url');
+      const { url } = await api('/auth/google?format=json');
       window.location.href = url;
     } catch (e: any) {
       toast(e.message, 'bad');
@@ -295,7 +295,7 @@ function GoogleInner() {
                 {data.reviewLink && <a href={data.reviewLink} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-white px-4 text-sm font-medium hover:border-brand-200">Review link <ExternalLink className="h-3.5 w-3.5" /></a>}
                 {acc.mode === 'demo' && <Button variant="secondary" loading={busy === 'sim'} onClick={() => action('sim', () => api('/google/demo/new-review', { body: {} }), (r) => `New ${r.review.rating}★ review from ${r.review.reviewer.name} — analysed and drafted`)} icon={<Zap className="h-4 w-4" />}>Simulate a new review</Button>}
                 {acc.mode === 'live' && acc.status !== 'needs_location' && <Button variant="secondary" loading={busy === 'sync'} onClick={() => action('sync', () => api('/google/sync', { method: 'POST' }), (r) => `${r.created} new of ${r.total} reviews`)} icon={<RefreshCw className="h-4 w-4" />}>Check for reviews</Button>}
-                {acc.mode === 'demo' && data.googleConfigured && <Button loading={busy === 'live'} onClick={async () => { setBusy('live'); try { const { url } = await api('/google/oauth/url'); window.location.href = url; } catch (e: any) { toast(e.message, 'bad'); setBusy(''); } }} icon={<GoogleMark />}>Connect real profile</Button>}
+                {acc.mode === 'demo' && data.googleConfigured && <Button loading={busy === 'live'} onClick={async () => { setBusy('live'); try { const { url } = await api('/auth/google?format=json'); window.location.href = url; } catch (e: any) { toast(e.message, 'bad'); setBusy(''); } }} icon={<GoogleMark />}>Connect real profile</Button>}
                 <Button variant="danger" loading={busy === 'off'} onClick={() => window.confirm(acc.mode === 'demo' ? 'Disconnect and delete the demo reviews?' : 'Disconnect Google? Reviews stay in Starling, but no new ones will be imported.') && action('off', () => api('/google', { method: 'DELETE' }), () => 'Disconnected')} icon={<Unplug className="h-4 w-4" />}>Disconnect</Button>
               </div>
             </div>

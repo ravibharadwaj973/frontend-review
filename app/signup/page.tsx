@@ -47,6 +47,7 @@ export default function SignupPage() {
         <Field label="Password" error={errors.password} hint="At least 8 characters"><Input type="password" value={form.password} onChange={set('password')} autoComplete="new-password" required minLength={8} /></Field>
         {error && !Object.keys(errors).length && <p className="rounded-lg bg-rose-soft px-3 py-2 text-sm text-rose">{error}</p>}
         <Button type="submit" size="lg" className="w-full" loading={busy}>Create account</Button>
+        <p className="text-xs text-ink-muted">By creating an account you agree to the <Link href="/terms" className="text-brand-600 hover:underline">Terms of Service</Link> and <Link href="/privacy-policy" className="text-brand-600 hover:underline">Privacy Policy</Link>.</p>
       </form>
     </AuthShell>
   );
