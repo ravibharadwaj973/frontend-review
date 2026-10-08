@@ -193,7 +193,7 @@ export default function AutopilotPage() {
     <>
       <PageHeader
         title="Autopilot"
-        subtitle="Starling keeps your Google profile active every week: it replies to reviews, posts your photos, publishes updates and keeps your hours right. You decide what needs your OK."
+        subtitle="ReviewRankr keeps your Google profile active every week: it replies to reviews, posts your photos, publishes updates and keeps your hours right. You decide what needs your OK."
         actions={<Button variant="secondary" onClick={runNow} loading={busy === 'run'} icon={<Play className="h-4 w-4" />}>Run now</Button>}
       />
 
@@ -235,7 +235,7 @@ export default function AutopilotPage() {
 
         {/* Photos */}
         <Panel title={<CardTitle icon={<Images className="h-4 w-4" />} title="Weekly photos" tag={!s.photos.enabled || !s.photos.perWeek ? <Badge>Off</Badge> : undefined} />} action={<Link href="/app/photos" className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 hover:underline">Photos <ArrowUpRight className="h-3.5 w-3.5" /></Link>}>
-          <p className="-mt-1 mb-4 text-sm text-ink-muted">Add photos once. Starling posts a few to Google each week on different days, so your profile always looks fresh.</p>
+          <p className="-mt-1 mb-4 text-sm text-ink-muted">Add photos once. ReviewRankr posts a few to Google each week on different days, so your profile always looks fresh.</p>
           <div className="flex flex-wrap items-center gap-4">
             <Stepper label="Photos per week" value={s.photos.perWeek} min={0} max={7} onChange={(v) => save({ photos: { perWeek: v, enabled: v > 0 } })} />
             <div>

@@ -137,7 +137,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-6 text-center">
         <Logo />
         <h1 className="mt-4 font-display text-2xl font-semibold">No business on this account</h1>
-        <p className="max-w-sm text-ink-muted">{user.isAdmin ? 'This is an admin account. Use the Starling admin website to manage businesses.' : 'Sign up with a business to use Starling.'}</p>
+        <p className="max-w-sm text-ink-muted">{user.isAdmin ? 'This is an admin account. Use the ReviewRankr admin website to manage businesses.' : 'Sign up with a business to use ReviewRankr.'}</p>
         <button onClick={logout} className="font-medium text-brand-600 hover:underline">Sign out</button>
       </div>
     );

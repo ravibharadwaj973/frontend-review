@@ -75,7 +75,7 @@ function Onboarding({ steps }: { steps: { done: boolean; label: string; href: st
       <div className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center">
         <div className="lg:w-64">
           <h2 className="font-display text-lg font-semibold">Finish setting up</h2>
-          <p className="text-sm text-ink-muted">{left} step{left > 1 ? 's' : ''} left before Starling can work on its own.</p>
+          <p className="text-sm text-ink-muted">{left} step{left > 1 ? 's' : ''} left before ReviewRankr can work on its own.</p>
         </div>
         <ol className="grid flex-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
           {steps.map((s, i) => (
@@ -161,7 +161,7 @@ export default function Dashboard() {
               <div>
                 <Stars value={o.avgRating} size={17} />
                 <p className="mt-1 text-sm text-ink-muted">{num(o.total)} Google reviews</p>
-                {o.direct?.total > 0 && <Link href="/app/reviews?filter=direct" className="text-xs font-medium text-brand-600 hover:underline">+ {num(o.direct.total)} sent in Starling</Link>}
+                {o.direct?.total > 0 && <Link href="/app/reviews?filter=direct" className="text-xs font-medium text-brand-600 hover:underline">+ {num(o.direct.total)} sent in ReviewRankr</Link>}
               </div>
             </div>
             <div className="w-full max-w-[280px] flex-1">

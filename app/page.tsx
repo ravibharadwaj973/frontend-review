@@ -78,8 +78,8 @@ function LiveReply() {
 const LOOP = [
   { title: 'A customer finishes a visit', body: 'Add them in seconds, or import your client list.' },
   { title: 'You send a personal request', body: 'Written for their service, opened in your own WhatsApp, SMS or email.' },
-  { title: 'They write an honest review', body: 'They tap the services they had and what stood out. Starling helps put it into simple words, they edit it, and post it on Google.' },
-  { title: 'Starling reads it and drafts a reply', body: 'Sentiment, services and issues are picked out; you edit and approve.' },
+  { title: 'They write an honest review', body: 'They tap the services they had and what stood out. ReviewRankr helps put it into simple words, they edit it, and post it on Google.' },
+  { title: 'ReviewRankr reads it and drafts a reply', body: 'Sentiment, services and issues are picked out; you edit and approve.' },
   { title: 'Patterns turn into fixes', body: 'See which complaints repeat, by service, month over month.' },
 ];
 
@@ -110,7 +110,7 @@ export default function Landing() {
             Answer every review.
           </h1>
           <p className="mt-6 max-w-[34rem] text-lg leading-relaxed text-ink-soft">
-            Starling helps salons, clinics, gyms and restaurants collect genuine Google reviews after each visit, reply to them in minutes with AI drafts you approve, and see what customers keep praising — or complaining about.
+            ReviewRankr helps salons, clinics, gyms and restaurants collect genuine Google reviews after each visit, reply to them in minutes with AI drafts you approve, and see what customers keep praising — or complaining about.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link href="/signup" className="inline-flex h-12 items-center rounded-xl bg-brand-600 px-6 text-[15px] font-medium text-white shadow-[inset_0_-2px_0_rgba(0,0,0,.18)] hover:bg-brand-700">
@@ -148,7 +148,7 @@ export default function Landing() {
             <MessageCircle className="h-6 w-6 text-brand-500" />
             <h2 className="mt-4 font-display text-3xl font-semibold text-ink">Requests that sound like you, not a bot</h2>
             <p className="mt-3 max-w-md text-[17px] leading-relaxed text-ink-soft">
-              Pick the customer and the service they had. Starling writes a short, personal message with your review link, and opens it in WhatsApp, SMS or email from your own number. Every link is tracked, so you see who opened it and who reviewed.
+              Pick the customer and the service they had. ReviewRankr writes a short, personal message with your review link, and opens it in WhatsApp, SMS or email from your own number. Every link is tracked, so you see who opened it and who reviewed.
             </p>
           </div>
           <div className="mx-auto w-full max-w-sm rounded-[28px] bg-[#E9E2D6] p-4 shadow-lift">
@@ -172,7 +172,7 @@ export default function Landing() {
             <Sparkles className="h-6 w-6 text-violet" />
             <h2 className="mt-4 font-display text-3xl font-semibold text-ink">See past the star rating</h2>
             <p className="mt-3 max-w-md text-[17px] leading-relaxed text-ink-soft">
-              Every review is read for sentiment, the services mentioned, and what went right or wrong. A 4.6 average can hide a waiting-time problem that shows up in one review out of ten — Starling surfaces it, with a suggested fix.
+              Every review is read for sentiment, the services mentioned, and what went right or wrong. A 4.6 average can hide a waiting-time problem that shows up in one review out of ten — ReviewRankr surfaces it, with a suggested fix.
             </p>
           </div>
         </div>
@@ -182,13 +182,13 @@ export default function Landing() {
             <RefreshCw className="h-6 w-6 text-brand-500" />
             <h2 className="mt-4 font-display text-3xl font-semibold text-ink">Your profile, in one place</h2>
             <p className="mt-3 max-w-md text-[17px] leading-relaxed text-ink-soft">
-              Keep hours, description, services and photos in Starling and push them to Google where its API allows. The sync screen shows exactly what Google accepted — and what it didn’t.
+              Keep hours, description, services and photos in ReviewRankr and push them to Google where its API allows. The sync screen shows exactly what Google accepted — and what it didn’t.
             </p>
           </div>
           <div className="overflow-hidden rounded-xl3 bg-white shadow-lift">
             <table className="w-full text-sm">
               <thead className="bg-mist text-left text-xs text-ink-muted">
-                <tr><th className="px-5 py-3 font-medium">Section</th><th className="px-3 py-3 font-medium">Starling</th><th className="px-3 py-3 font-medium">Google</th><th className="px-5 py-3 font-medium">Status</th></tr>
+                <tr><th className="px-5 py-3 font-medium">Section</th><th className="px-3 py-3 font-medium">ReviewRankr</th><th className="px-3 py-3 font-medium">Google</th><th className="px-5 py-3 font-medium">Status</th></tr>
               </thead>
               <tbody className="divide-y divide-line-soft">
                 {[['Business name', '✓', '✓', 'Synced', 'good'], ['Opening hours', '✓', '✓', 'Synced', 'good'], ['Services', '12', '12', 'Synced', 'good'], ['Photos', '25', '18', 'Partial', 'warn'], ['Description', 'Edited', 'Older', 'Needs push', 'info']].map(([a, b, c, d, t]) => (

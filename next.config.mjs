@@ -1,4 +1,3 @@
-
 /** @type {import('next').NextConfig} */
 
 /**
@@ -16,14 +15,14 @@ try {
 } catch {
   /* checked below */
 }
-console.log(`[starling] Forwarding /api and /uploads to ${BACKEND_URL}`);
+console.log(`[reviewrankr] Forwarding /api and /uploads to ${BACKEND_URL}`);
 
 if (!raw && (process.env.VERCEL || process.env.NODE_ENV === 'production') && process.env.npm_lifecycle_event === 'build') {
   // Fail loudly instead of deploying a site that can't reach its API
   if (process.env.VERCEL) {
     throw new Error('BACKEND_URL is not set. In Vercel → Project → Settings → Environment Variables, add BACKEND_URL = your backend address (e.g. https://api.yourbusiness.in), then redeploy.');
   }
-  console.warn('[starling] BACKEND_URL is not set — using http://localhost:4000');
+  console.warn('[reviewrankr] BACKEND_URL is not set — using http://localhost:4000');
 }
 if (!/^https?:\/\//.test(BACKEND_URL)) {
   throw new Error(`BACKEND_URL must start with http:// or https:// (got "${BACKEND_URL}")`);

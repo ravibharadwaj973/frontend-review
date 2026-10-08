@@ -22,8 +22,8 @@ type AuthState = {
 };
 
 // While an admin is viewing a business: the session to restore afterwards, and where to go back to
-const PREV_TOKEN_KEY = 'starling.prevToken';
-const ADMIN_RETURN_KEY = 'starling.adminReturn';
+const PREV_TOKEN_KEY = 'reviewrankr.prevToken';
+const ADMIN_RETURN_KEY = 'reviewrankr.adminReturn';
 
 const AuthContext = createContext<AuthState | null>(null);
 
@@ -55,8 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refresh();
     // The API says the account was paused (or resumed) — reload who we are
     const onPaused = () => refresh();
-    window.addEventListener('starling:account', onPaused);
-    return () => window.removeEventListener('starling:account', onPaused);
+    window.addEventListener('reviewrankr:account', onPaused);
+    return () => window.removeEventListener('reviewrankr:account', onPaused);
   }, [refresh]);
 
   const login = async (email: string, password: string) => {
@@ -119,7 +119,7 @@ export function useAuth() {
 /** Called by /impersonate when an admin opens this business from the admin site. */
 export function beginAdminSession(token: string, back?: string | null) {
   try {
-    const current = window.localStorage.getItem('starling.token');
+    const current = window.localStorage.getItem('reviewrankr.token');
     // Keep this browser's own session (if it isn't already an admin view) to restore later
     if (current && !window.localStorage.getItem(PREV_TOKEN_KEY)) window.localStorage.setItem(PREV_TOKEN_KEY, current);
     if (back && /^https?:\/\//.test(back)) window.localStorage.setItem(ADMIN_RETURN_KEY, back);

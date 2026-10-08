@@ -135,7 +135,7 @@ function RequestsInner() {
               <div className="space-y-3 p-5">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-12" />)}</div>
             ) : data.requests.length === 0 ? (
               <Empty icon={<Send className="h-5 w-5" />} title="No requests here yet" action={<Button onClick={() => setComposer({ open: true })}>Ask your first customer</Button>}>
-                Pick a customer and the service they had — Starling writes the message.
+                Pick a customer and the service they had — ReviewRankr writes the message.
               </Empty>
             ) : (
               <div className="overflow-x-auto">

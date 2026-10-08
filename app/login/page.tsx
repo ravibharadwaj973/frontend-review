@@ -21,8 +21,8 @@ function LoginForm() {
 
   useEffect(() => {
     if (params.get('demo')) {
-      setEmail('demo@starling.app');
-      setPassword('starling123');
+      setEmail('demo@reviewrankr.app');
+      setPassword('reviewrankr123');
     }
     if (params.get('expired')) setError('Your session expired. Sign in again.');
   }, [params]);
@@ -64,7 +64,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <AuthShell title="Welcome back" subtitle="Sign in to see your reviews and requests." footer={<>New to Starling? <Link href="/signup" className="font-medium text-brand-600 hover:underline">Create an account</Link></>}>
+    <AuthShell title="Welcome back" subtitle="Sign in to see your reviews and requests." footer={<>New to ReviewRankr? <Link href="/signup" className="font-medium text-brand-600 hover:underline">Create an account</Link></>}>
       <Suspense>
         <LoginForm />
       </Suspense>

@@ -181,7 +181,7 @@ export function RequestComposer({ open, onClose, onDone, preset }: { open: boole
             </Field>
           </div>
           <div className="flex items-center justify-between gap-3 border-t border-line-soft pt-4">
-            <p className="text-xs text-ink-muted">Every customer gets the same honest ask — Starling never filters out unhappy customers.</p>
+            <p className="text-xs text-ink-muted">Every customer gets the same honest ask — ReviewRankr never filters out unhappy customers.</p>
             <Button variant="ai" onClick={generate} loading={busy === 'generate'} disabled={!customerId || !!missingContact} icon={<Sparkles className="h-4 w-4" />}>Write message</Button>
           </div>
         </div>

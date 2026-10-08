@@ -5,7 +5,7 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: { default: 'Starling — reviews and reputation for local businesses', template: '%s · Starling' },
+  title: { default: 'ReviewRankr — reviews and reputation for local businesses', template: '%s · ReviewRankr' },
   description: 'Ask customers for genuine Google reviews, reply faster with AI, and learn what people actually say about your business.',
   icons: { icon: '/favicon.svg' },
 };

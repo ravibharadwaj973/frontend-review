@@ -18,7 +18,7 @@ h1, h2, h3, .font-display { font-family: "Bricolage Grotesque Variable", "Bricol
 
 :focus-visible { outline: 2px solid #2F6FED; outline-offset: 2px; border-radius: 6px; }
 
-/* ---- AI sheen: reserved for anything Starling's AI wrote that still needs a human ---- */
+/* ---- AI sheen: reserved for anything ReviewRankr's AI wrote that still needs a human ---- */
 .ai-sheen {
   position: relative;
   border: 1.5px solid transparent;

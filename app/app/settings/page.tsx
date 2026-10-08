@@ -57,7 +57,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" subtitle="How Starling writes for you, what it does automatically, and your account." />
+      <PageHeader title="Settings" subtitle="How ReviewRankr writes for you, what it does automatically, and your account." />
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel title="Voice for replies and messages">
           <div className="space-y-2">

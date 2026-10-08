@@ -123,7 +123,7 @@ export function BillingView() {
           </div>
           {(pay.upiId || pay.bankDetails || pay.instructions) && (
             <div className="mt-4 flex flex-col gap-4 rounded-xl bg-mist p-4 sm:flex-row">
-              {pay.upiId && <UpiQr upiId={pay.upiId} name={pay.companyName || 'Starling'} amount={data.due} />}
+              {pay.upiId && <UpiQr upiId={pay.upiId} name={pay.companyName || 'ReviewRankr'} amount={data.due} />}
               <div className="min-w-0 flex-1 space-y-2 text-sm">
                 {pay.upiId && (
                   <p className="flex items-center gap-2">

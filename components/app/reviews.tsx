@@ -162,7 +162,7 @@ export function ReplyComposer({ review, onChanged, compact }: { review: Review; 
     setBusy('publish');
     try {
       const res = await api(`/reviews/${review._id}/publish`, { body: { text, draftId: draft?._id } });
-      toast(res.publishedTo === 'google' ? 'Reply published on Google' : res.publishedTo === 'app' ? 'Reply saved in Starling' : 'Reply saved (demo — not sent to Google)');
+      toast(res.publishedTo === 'google' ? 'Reply published on Google' : res.publishedTo === 'app' ? 'Reply saved in ReviewRankr' : 'Reply saved (demo — not sent to Google)');
       onChanged(res.review);
     } catch (e: any) {
       toast(e.message, 'bad');
@@ -174,7 +174,7 @@ export function ReplyComposer({ review, onChanged, compact }: { review: Review; 
   if (!draft && !text) {
     return (
       <div className="rounded-xl border border-dashed border-line bg-white p-4">
-        <p className="text-sm text-ink-muted">No reply yet. Starling can draft one using the review, your services and your tone of voice.</p>
+        <p className="text-sm text-ink-muted">No reply yet. ReviewRankr can draft one using the review, your services and your tone of voice.</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <Button variant="ai" onClick={generate} loading={busy === 'draft'} icon={<Sparkles className="h-4 w-4" />}>Draft a reply</Button>
           <Button variant="ghost" onClick={() => setText(' ')}>Write my own</Button>
@@ -214,7 +214,7 @@ export function ReplyComposer({ review, onChanged, compact }: { review: Review; 
         </div>
       )}
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs text-ink-muted">{review.source === 'demo' ? 'Demo review — publishing saves it here only.' : review.source === 'direct' ? 'Submitted in Starling — your reply is saved here, not posted publicly.' : 'Publishes publicly on your Google profile.'}</p>
+        <p className="text-xs text-ink-muted">{review.source === 'demo' ? 'Demo review — publishing saves it here only.' : review.source === 'direct' ? 'Submitted in ReviewRankr — your reply is saved here, not posted publicly.' : 'Publishes publicly on your Google profile.'}</p>
         <div className="flex gap-2">
           {compact && <Button size="sm" variant="ghost" onClick={generate} loading={busy === 'draft'} icon={<RefreshCw className="h-3.5 w-3.5" />}>Redraft</Button>}
           <Button size={compact ? 'sm' : 'md'} onClick={publish} loading={busy === 'publish'} disabled={!text.trim()} icon={<Check className="h-4 w-4" />}>Approve & publish</Button>
@@ -285,7 +285,7 @@ export function ReviewDetail({ reviewId, onClose, onChanged }: { reviewId: strin
           <p className={cx('mt-4 text-[16px] leading-relaxed', r.comment ? 'text-ink' : 'italic text-ink-faint')}>{r.comment || 'This customer left a rating without a written review.'}</p>
           {r.source === 'direct' && (
             <div className="mt-4 flex flex-wrap items-center gap-1.5 text-xs text-ink-muted">
-              <Badge tone="info">Submitted in Starling{r.submittedVia === 'qr' ? ' via QR code' : ' via review link'}</Badge>
+              <Badge tone="info">Submitted in ReviewRankr{r.submittedVia === 'qr' ? ' via QR code' : ' via review link'}</Badge>
               {(r.services || []).map((s) => <Badge key={s}>{s}</Badge>)}
             </div>
           )}
@@ -297,7 +297,7 @@ export function ReviewDetail({ reviewId, onClose, onChanged }: { reviewId: strin
         </div>
 
         <section>
-          <h3 className="mb-2 font-display text-[15px] font-semibold">What Starling found</h3>
+          <h3 className="mb-2 font-display text-[15px] font-semibold">What ReviewRankr found</h3>
           <AnalysisPanel review={r} onReanalyze={reanalyze} busy={busy} />
         </section>
 
@@ -310,7 +310,7 @@ export function ReviewDetail({ reviewId, onClose, onChanged }: { reviewId: strin
                 <p className="whitespace-pre-line">{r.reply.comment}</p>
               </div>
               <div className="mt-3 flex items-center justify-between text-xs text-ink-muted">
-                <span>Replied {timeAgo(r.reply.updateTime)}{r.reply.by === 'google' ? ' on Google' : ' from Starling'}</span>
+                <span>Replied {timeAgo(r.reply.updateTime)}{r.reply.by === 'google' ? ' on Google' : ' from ReviewRankr'}</span>
                 <button onClick={removeReply} className="inline-flex items-center gap-1 text-rose hover:underline"><Trash2 className="h-3 w-3" />Remove</button>
               </div>
             </div>

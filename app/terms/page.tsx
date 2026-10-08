@@ -20,7 +20,7 @@ const sections: Section[] = [
   },
   {
     id: 'service',
-    title: 'What Starling does',
+    title: 'What ReviewRankr does',
     body: (
       <p>{P} helps local businesses ask customers for reviews, read and reply to Google reviews, use AI to draft replies, posts and answers, manage their Google Business Profile (hours, photos, posts, services), and see insights from reviews. Some features need a connected Google Business Profile. We may improve, change or remove features over time.</p>
     ),

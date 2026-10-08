@@ -89,7 +89,7 @@ export default function WeeklyPhotosPage() {
     <>
       <PageHeader
         title="Weekly photos"
-        subtitle="Upload photos once. Starling posts a few to your Google profile every week, on different days, so it always looks fresh and active."
+        subtitle="Upload photos once. ReviewRankr posts a few to your Google profile every week, on different days, so it always looks fresh and active."
         actions={<Button onClick={() => fileRef.current?.click()} loading={busy === 'upload'} icon={<Upload className="h-4 w-4" />}>Upload photos</Button>}
       />
       <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" multiple hidden onChange={(e) => upload(e.target.files)} />
@@ -145,7 +145,7 @@ export default function WeeklyPhotosPage() {
       <Panel title={`Queue · ${data.queue.length}`} padded={false} className="mb-6">
         {data.queue.length === 0 ? (
           <Empty icon={<Images className="h-6 w-6" />} title="The queue is empty" action={<Button onClick={() => fileRef.current?.click()} icon={<Upload className="h-4 w-4" />}>Upload photos</Button>}>
-            Upload 10–20 photos and Starling will keep posting them for weeks.
+            Upload 10–20 photos and ReviewRankr will keep posting them for weeks.
           </Empty>
         ) : (
           <ol className="divide-y divide-line-soft">

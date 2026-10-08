@@ -63,7 +63,7 @@ function ReviewsInbox() {
 
   return (
     <>
-      <PageHeader title="Reviews" subtitle="Google reviews and reviews customers send in Starling, in one inbox. Open one to see the analysis and approve a reply." />
+      <PageHeader title="Reviews" subtitle="Google reviews and reviews customers send in ReviewRankr, in one inbox. Open one to see the analysis and approve a reply." />
 
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <Segmented<Filter>

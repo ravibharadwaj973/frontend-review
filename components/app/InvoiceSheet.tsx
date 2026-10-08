@@ -25,7 +25,7 @@ export function InvoiceSheet({ doc }: { doc: any }) {
       <article className="mx-auto max-w-[760px] rounded-xl2 bg-white p-8 shadow-lift print:max-w-none print:rounded-none print:p-0 print:shadow-none sm:p-10">
         <header className="flex flex-wrap items-start justify-between gap-6 border-b border-line-soft pb-6">
           <div>
-            <p className="font-display text-2xl font-semibold">{f.companyName || 'Starling'}</p>
+            <p className="font-display text-2xl font-semibold">{f.companyName || 'ReviewRankr'}</p>
             <p className="mt-1 text-sm text-ink-muted">{[f.supportPhone, f.supportEmail].filter(Boolean).join(' · ')}</p>
           </div>
           <div className="text-right">
@@ -58,7 +58,7 @@ export function InvoiceSheet({ doc }: { doc: any }) {
           <tbody>
             <tr className="border-b border-line-soft">
               <td className="py-3">
-                <p className="font-medium">{i.description || i.planName || 'Starling subscription'}</p>
+                <p className="font-medium">{i.description || i.planName || 'ReviewRankr subscription'}</p>
                 {i.periodStart && <p className="text-xs text-ink-muted">{shortDate(i.periodStart)} – {shortDate(i.periodEnd)}</p>}
               </td>
               <td className="py-3 text-right tabular">{rupees(i.amount)}</td>

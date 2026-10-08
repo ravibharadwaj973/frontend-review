@@ -154,7 +154,7 @@ export function ServiceFinder({ open, onClose, onDone, website }: { open: boolea
         )}
         {source === 'website' && (
           <div>
-            <p className="flex items-start gap-2 text-sm text-ink-muted"><Globe className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" />Starling reads your website (and its menu or price pages) and picks out the services listed there.</p>
+            <p className="flex items-start gap-2 text-sm text-ink-muted"><Globe className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" />ReviewRankr reads your website (and its menu or price pages) and picks out the services listed there.</p>
             <div className="mt-3 flex gap-2">
               <Input type="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://yourbusiness.com" aria-label="Website address" />
               <Button onClick={() => d.find('website', url)} loading={d.loading} disabled={!url}>Read website</Button>

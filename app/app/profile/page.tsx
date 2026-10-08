@@ -105,7 +105,7 @@ function InfoTab() {
           </div>
         </Panel>
         <Panel title="Team" action={<Button size="sm" variant="ghost" icon={<Plus className="h-3.5 w-3.5" />} onClick={() => set('staff', [...(draft.staff || []), { name: '', role: '' }])}>Add person</Button>}>
-          <p className="-mt-2 mb-3 text-sm text-ink-muted">Starling uses names to recognise staff mentioned in reviews and in replies.</p>
+          <p className="-mt-2 mb-3 text-sm text-ink-muted">ReviewRankr uses names to recognise staff mentioned in reviews and in replies.</p>
           <ul className="space-y-2">
             {(draft.staff || []).map((s: any, i: number) => (
               <li key={i} className="flex gap-2">
@@ -395,7 +395,7 @@ function ServicesTab() {
         </div>
       </div>
       {!services.length ? (
-        <Panel><Empty title="Add the services you offer" action={<div className="flex gap-2"><Button variant="ai" onClick={() => setFinding(true)} icon={<Sparkles className="h-4 w-4" />}>Find my services</Button><Button variant="secondary" onClick={() => setEditing({ active: true })}>Add one</Button></div>}>Starling can suggest a full list for your type of business, or read it from your website or Google profile.</Empty></Panel>
+        <Panel><Empty title="Add the services you offer" action={<div className="flex gap-2"><Button variant="ai" onClick={() => setFinding(true)} icon={<Sparkles className="h-4 w-4" />}>Find my services</Button><Button variant="secondary" onClick={() => setEditing({ active: true })}>Add one</Button></div>}>ReviewRankr can suggest a full list for your type of business, or read it from your website or Google profile.</Empty></Panel>
       ) : (
         <div className="space-y-6">
           {groups.map(([group, items]) => (
@@ -471,7 +471,7 @@ function PhotosTab() {
     mutate();
   };
   const remove = async (p: any) => {
-    if (!window.confirm('Delete this photo from Starling? (It stays on Google if already published there.)')) return;
+    if (!window.confirm('Delete this photo from ReviewRankr? (It stays on Google if already published there.)')) return;
     await api(`/photos/${p._id}`, { method: 'DELETE' });
     mutate();
   };

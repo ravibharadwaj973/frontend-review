@@ -61,7 +61,7 @@ function Connect({ googleConfigured, onDone }: { googleConfigured: boolean; onDo
     <div className="grid gap-6 lg:grid-cols-2">
       <Panel>
         <div className="flex items-center gap-3"><GoogleMark /><h2 className="font-display text-xl font-semibold">Connect Google Business Profile</h2></div>
-        <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">Sign in with the Google account that manages your listing. Starling will import reviews, check for new ones every 15 minutes, and publish replies you approve.</p>
+        <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">Sign in with the Google account that manages your listing. ReviewRankr will import reviews, check for new ones every 15 minutes, and publish replies you approve.</p>
         <ul className="mt-4 space-y-1.5 text-sm text-ink-soft">
           {['Read and reply to reviews', 'Update hours, description, phone and website', 'Publish photos and your service menu'].map((t) => <li key={t} className="flex gap-2"><Check className="mt-0.5 h-4 w-4 text-leaf" />{t}</li>)}
         </ul>
@@ -166,7 +166,7 @@ function SyncTable({ onChanged }: { onChanged: () => void }) {
   const pushable = data.sections.filter((s: any) => s.pushable && s.key !== 'photos');
   return (
     <Panel
-      title="What Google shows vs. Starling"
+      title="What Google shows vs. ReviewRankr"
       padded={false}
       action={<div className="flex gap-2">{!demo && <Button size="sm" variant="ghost" onClick={refresh} loading={busy === 'refresh'} icon={<RefreshCw className="h-3.5 w-3.5" />}>Re-check</Button>}<Button size="sm" disabled={!selected.length} loading={busy === 'push'} onClick={() => push(selected)} icon={<ArrowUpFromLine className="h-3.5 w-3.5" />}>Push {selected.length || ''} to Google</Button></div>}
     >
@@ -174,7 +174,7 @@ function SyncTable({ onChanged }: { onChanged: () => void }) {
       <div className="mt-3 overflow-x-auto">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-y border-line-soft bg-mist/50 text-left text-xs text-ink-muted">
-            <tr><th className="w-10 px-5 py-2.5" /><th className="py-2.5 font-medium">Section</th><th className="px-3 py-2.5 font-medium">Starling</th><th className="px-3 py-2.5 font-medium">Google</th><th className="px-5 py-2.5 font-medium">Status</th></tr>
+            <tr><th className="w-10 px-5 py-2.5" /><th className="py-2.5 font-medium">Section</th><th className="px-3 py-2.5 font-medium">ReviewRankr</th><th className="px-3 py-2.5 font-medium">Google</th><th className="px-5 py-2.5 font-medium">Status</th></tr>
           </thead>
           <tbody className="divide-y divide-line-soft">
             {data.sections.map((s: any) => {
@@ -296,7 +296,7 @@ function GoogleInner() {
                 {acc.mode === 'demo' && <Button variant="secondary" loading={busy === 'sim'} onClick={() => action('sim', () => api('/google/demo/new-review', { body: {} }), (r) => `New ${r.review.rating}★ review from ${r.review.reviewer.name} — analysed and drafted`)} icon={<Zap className="h-4 w-4" />}>Simulate a new review</Button>}
                 {acc.mode === 'live' && acc.status !== 'needs_location' && <Button variant="secondary" loading={busy === 'sync'} onClick={() => action('sync', () => api('/google/sync', { method: 'POST' }), (r) => `${r.created} new of ${r.total} reviews`)} icon={<RefreshCw className="h-4 w-4" />}>Check for reviews</Button>}
                 {acc.mode === 'demo' && data.googleConfigured && <Button loading={busy === 'live'} onClick={async () => { setBusy('live'); try { const { url } = await api('/auth/google?format=json'); window.location.href = url; } catch (e: any) { toast(e.message, 'bad'); setBusy(''); } }} icon={<GoogleMark />}>Connect real profile</Button>}
-                <Button variant="danger" loading={busy === 'off'} onClick={() => window.confirm(acc.mode === 'demo' ? 'Disconnect and delete the demo reviews?' : 'Disconnect Google? Reviews stay in Starling, but no new ones will be imported.') && action('off', () => api('/google', { method: 'DELETE' }), () => 'Disconnected')} icon={<Unplug className="h-4 w-4" />}>Disconnect</Button>
+                <Button variant="danger" loading={busy === 'off'} onClick={() => window.confirm(acc.mode === 'demo' ? 'Disconnect and delete the demo reviews?' : 'Disconnect Google? Reviews stay in ReviewRankr, but no new ones will be imported.') && action('off', () => api('/google', { method: 'DELETE' }), () => 'Disconnected')} icon={<Unplug className="h-4 w-4" />}>Disconnect</Button>
               </div>
             </div>
           </Panel>
