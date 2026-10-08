@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import QRCode from 'qrcode';
@@ -258,7 +259,10 @@ export default function SharePage() {
               </div>
             )}
             {!data?.reviewLink && data && (
-              <p className="mt-3 rounded-lg bg-amber-soft px-3 py-2 text-sm text-amber">Connect Google (or add your review link in Settings) so the button on this page leads to your Google review form.</p>
+              <p className="mt-3 rounded-lg bg-amber-soft px-3 py-2 text-sm text-amber">
+                {data.placeholderLink ? 'Your review link is still the demo sample.' : 'Your Google review link isn’t saved yet.'} Until it is, “Post on Google” opens a Google search for your business.{' '}
+                <Link href="/app/settings#review-link" className="font-medium underline">Add your review link</Link>
+              </p>
             )}
           </Panel>
 

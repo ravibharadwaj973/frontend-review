@@ -19,6 +19,8 @@ export default function SettingsPage() {
   const [reviewLink, setReviewLink] = useState(business?.reviewLink || '');
   const [account, setAccount] = useState({ name: user?.name || '', currentPassword: '', newPassword: '' });
   const [busy, setBusy] = useState('');
+  const savedLink: string = business?.reviewLink || '';
+  const placeholder = /DEMO_PLACE_ID/.test(savedLink);
 
   useEffect(() => {
     setVoice(business?.voice || {});
@@ -101,11 +103,25 @@ export default function SettingsPage() {
             <div className="mt-5 flex justify-end"><Button onClick={() => saveBusiness('auto', { automation })} loading={busy === 'auto'}>Save automation</Button></div>
           </Panel>
 
-          <Panel title="Google review link">
-            <Field hint="Filled in automatically when you connect Google. Set it by hand if you haven’t connected yet.">
-              <Input type="url" value={reviewLink} onChange={(e) => setReviewLink(e.target.value)} placeholder="https://search.google.com/local/writereview?placeid=…" />
+          <Panel id="review-link" title="Google review link" action={savedLink && !placeholder ? <Badge tone="good">Saved</Badge> : <Badge tone="warn">Not set</Badge>}>
+            <p className="-mt-1 mb-3 text-sm text-ink-muted">
+              Customers are sent here to post their review on Google. It works without connecting Google, and it stays saved even if you disconnect Google.
+            </p>
+            {placeholder && <p className="mb-3 rounded-lg bg-amber-soft px-3 py-2 text-sm text-amber">The saved link is the demo sample, so customers go to a Google search instead. Paste your real link below.</p>}
+            <Field label="Link or Place ID" hint="In your Google Business Profile, tap “Ask for reviews” (or “Share review form”) and copy the link. A Place ID (starts with ChIJ…) also works.">
+              <Input value={reviewLink} onChange={(e) => setReviewLink(e.target.value)} placeholder="https://g.page/r/…/review" inputMode="url" autoComplete="off" />
             </Field>
-            <div className="mt-4 flex justify-end"><Button variant="secondary" onClick={() => saveBusiness('link', { reviewLink })} loading={busy === 'link'}>Save link</Button></div>
+            <div className="mt-4 flex flex-wrap justify-end gap-2">
+              {savedLink && !placeholder && <a href={savedLink} target="_blank" rel="noreferrer"><Button variant="ghost">Test link</Button></a>}
+              <Button
+                variant="secondary"
+                onClick={() => saveBusiness('link', { reviewLink })}
+                loading={busy === 'link'}
+                disabled={!reviewLink.trim() || reviewLink.trim() === savedLink}
+              >
+                Save link
+              </Button>
+            </div>
           </Panel>
 
           <Panel title="AI engine">

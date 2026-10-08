@@ -126,8 +126,8 @@ export function RequestComposer({ open, onClose, onDone, preset }: { open: boole
     <Modal open={open} onClose={onClose} title={request ? 'Review and send' : 'Ask for a review'} wide>
       {!request ? (
         <div className="space-y-5">
-          {!biz?.business?.reviewLink && (
-            <p className="rounded-lg bg-amber-soft px-3 py-2 text-sm text-amber">Connect Google (or add your review link in Settings) so the message can include it.</p>
+          {(!biz?.business?.reviewLink || /DEMO_PLACE_ID/.test(biz.business.reviewLink)) && (
+            <p className="rounded-lg bg-amber-soft px-3 py-2 text-sm text-amber">Add your Google review link first so customers land on your Google review page. <a href="/app/settings#review-link" className="font-medium underline">Add it in Settings</a></p>
           )}
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Customer">

@@ -59,6 +59,10 @@ function Connect({ googleConfigured, onDone }: { googleConfigured: boolean; onDo
   };
   return (
     <div className="grid gap-6 lg:grid-cols-2">
+      <div className="rounded-xl2 border border-brand-100 bg-brand-50 px-5 py-4 text-sm text-ink-soft lg:col-span-2">
+        <span className="font-medium text-brand-700">Customers can post on Google before you connect.</span> Save your Google review link in{' '}
+        <a href="/app/settings#review-link" className="font-medium text-brand-700 underline">Settings → Google review link</a>, and the review page sends every customer straight to your Google review form. Connecting later doesn’t change your saved link.
+      </div>
       <Panel>
         <div className="flex items-center gap-3"><GoogleMark /><h2 className="font-display text-xl font-semibold">Connect Google Business Profile</h2></div>
         <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">Sign in with the Google account that manages your listing. ReviewRankr will import reviews, check for new ones every 15 minutes, and publish replies you approve.</p>

@@ -10,6 +10,7 @@ type Info = {
   serviceName?: string;
   topics: string[];
   hasReviewLink: boolean;
+  exactGoogleLink?: boolean;
   services: { name: string; category: string }[];
   staff: string[];
   aspects: string[];
@@ -134,14 +135,18 @@ export function ReviewHelper({ base }: { base: string }) {
     }
   };
 
+  /** Copies the review and opens the business's Google review page (via /go, which counts the click). */
   const copyAndGo = async () => {
-    try {
-      await navigator.clipboard.writeText(draft);
-    } catch {
-      /* clipboard blocked — the text is still visible to copy by hand */
+    const text = (draft || note).trim();
+    if (text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        /* clipboard blocked — the text is still visible to copy by hand */
+      }
     }
     setCopied(true);
-    setTimeout(() => { window.location.href = `${base}/go`; }, 900);
+    setTimeout(() => { window.location.href = `${base}/go`; }, text ? 900 : 150);
   };
 
   if (error && !info) {
@@ -173,7 +178,7 @@ export function ReviewHelper({ base }: { base: string }) {
               <CheckCircle2 className="mx-auto h-14 w-14 text-leaf" />
               <h1 className="mt-4 font-display text-[28px] font-semibold leading-tight">Thank you{name || info.firstName ? `, ${name || info.firstName}` : ''}!</h1>
               <p className="mt-2 text-[15px] text-ink-soft">Your review was sent to {info.business.name}.</p>
-              {info.hasReviewLink && (
+              {info.hasReviewLink !== false && (
                 <div className="mt-8 rounded-xl bg-mist p-5 text-left">
                   <p className="font-display text-[17px] font-semibold">Share it on Google too?</p>
                   <p className="mt-1 text-sm text-ink-muted">It helps other people find {info.business.name}. Google asks you to sign in to your Google account.</p>
@@ -298,17 +303,35 @@ export function ReviewHelper({ base }: { base: string }) {
 
           {error && <p className="mt-4 rounded-lg bg-amber-soft px-3 py-2 text-sm text-amber">{error}</p>}
 
+          {/* Main action: post the review on Google. Same for every rating — no gating. */}
+          <button
+            type="button"
+            onClick={copyAndGo}
+            disabled={!rating || copied}
+            className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-600 text-[15px] font-medium text-white shadow-[inset_0_-2px_0_rgba(0,0,0,.18)] transition-colors hover:bg-brand-700 disabled:opacity-40"
+          >
+            {copied ? <ClipboardCheck className="h-5 w-5" /> : <Star className="h-4 w-4 fill-star text-star" />}
+            {copied ? ((draft || note).trim() ? 'Copied — opening Google…' : 'Opening Google…') : (draft || note).trim() ? 'Copy & post on Google' : 'Post on Google'}
+          </button>
+          {rating > 0 && (
+            <p className="mt-2 text-center text-xs text-ink-muted">
+              {(draft || note).trim() ? `We copy your review for you. On Google, tap the ${rating} star${rating > 1 ? 's' : ''}, then paste.` : 'Google asks you to sign in to your Google account.'}
+            </p>
+          )}
+
+          <div className="my-5 flex items-center gap-3 text-xs text-ink-faint"><span className="h-px flex-1 bg-line-soft" />or<span className="h-px flex-1 bg-line-soft" /></div>
+
           <button
             type="button"
             onClick={submit}
             disabled={!rating || submitting}
-            className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-600 text-[15px] font-medium text-white shadow-[inset_0_-2px_0_rgba(0,0,0,.18)] transition-colors hover:bg-brand-700 disabled:opacity-40"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-line bg-white text-[15px] font-medium text-ink-soft transition-colors hover:border-brand-200 hover:text-brand-700 disabled:opacity-40"
           >
             {submitting ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            Submit review
+            Send it only to {info.business.name}
           </button>
-          <p className="mt-2 text-center text-xs text-ink-muted">Goes straight to {info.business.name}. No login or app needed.</p>
-          <p className="mt-1 text-center text-[11px] text-ink-faint">By submitting you agree to our <a href="/terms" target="_blank" className="underline hover:text-brand-600">Terms</a> and <a href="/privacy-policy" target="_blank" className="underline hover:text-brand-600">Privacy Policy</a>.</p>
+          <p className="mt-2 text-center text-xs text-ink-muted">No Google account needed. The business reads it in private.</p>
+          <p className="mt-3 text-center text-[11px] text-ink-faint">By continuing you agree to our <a href="/terms" target="_blank" className="underline hover:text-brand-600">Terms</a> and <a href="/privacy-policy" target="_blank" className="underline hover:text-brand-600">Privacy Policy</a>.</p>
           </>
           )}
         </div>

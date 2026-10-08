@@ -177,9 +177,9 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
   );
 }
 
-export function Panel({ children, className, title, action, padded = true }: { children: React.ReactNode; className?: string; title?: React.ReactNode; action?: React.ReactNode; padded?: boolean }) {
+export function Panel({ children, className, title, action, padded = true, id }: { children: React.ReactNode; className?: string; title?: React.ReactNode; action?: React.ReactNode; padded?: boolean; id?: string }) {
   return (
-    <section className={cx('min-w-0 rounded-xl2 border border-line-soft bg-paper shadow-lift', className)}>
+    <section id={id} className={cx('min-w-0 scroll-mt-6 rounded-xl2 border border-line-soft bg-paper shadow-lift', className)}>
       {(title || action) && (
         <header className="flex items-center justify-between gap-3 px-5 pt-5">
           {typeof title === 'string' ? <h2 className="font-display text-[17px] font-semibold text-ink">{title}</h2> : title}
