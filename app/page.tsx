@@ -116,9 +116,6 @@ export default function Landing() {
             <Link href="/signup" className="inline-flex h-12 items-center rounded-xl bg-brand-600 px-6 text-[15px] font-medium text-white shadow-[inset_0_-2px_0_rgba(0,0,0,.18)] hover:bg-brand-700">
               Set up your business
             </Link>
-            <Link href="/login?demo=1" className="inline-flex h-12 items-center rounded-xl border border-line bg-white px-6 text-[15px] font-medium text-ink hover:border-brand-200">
-              Explore the demo salon
-            </Link>
           </div>
           <p className="mt-5 text-sm text-ink-muted">Works with your Google Business Profile. Free while in beta.</p>
         </div>

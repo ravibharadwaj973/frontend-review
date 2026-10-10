@@ -45,18 +45,6 @@ function Connect({ googleConfigured, onDone }: { googleConfigured: boolean; onDo
       setBusy('');
     }
   };
-  const demo = async () => {
-    setBusy('demo');
-    try {
-      const res = await api('/google/demo', { method: 'POST' });
-      toast(`Demo profile connected with ${res.imported} sample reviews. Analysis runs in the background.`);
-      onDone();
-    } catch (e: any) {
-      toast(e.message, 'bad');
-    } finally {
-      setBusy('');
-    }
-  };
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <div className="rounded-xl2 border border-brand-100 bg-brand-50 px-5 py-4 text-sm text-ink-soft lg:col-span-2">
@@ -77,12 +65,6 @@ function Connect({ googleConfigured, onDone }: { googleConfigured: boolean; onDo
             <p className="mt-1.5">Add <code className="rounded bg-white/70 px-1">GOOGLE_CLIENT_ID</code> and <code className="rounded bg-white/70 px-1">GOOGLE_CLIENT_SECRET</code> to <code className="rounded bg-white/70 px-1">backend/.env</code> — the README walks through creating them in Google Cloud and requesting Business Profile API access.</p>
           </div>
         )}
-      </Panel>
-      <Panel>
-        <div className="flex items-center gap-3"><FlaskConical className="h-5 w-5 text-brand-500" /><h2 className="font-display text-xl font-semibold">Try it with demo data</h2></div>
-        <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">Google approves Business Profile API access per project, which can take a few days. Meanwhile, a demo connection loads realistic sample reviews so you can try analysis, replies and analytics end to end.</p>
-        <p className="mt-3 text-sm text-ink-muted">Nothing in demo mode is sent to Google, and it’s clearly labelled throughout. Connecting your real profile later replaces the demo data.</p>
-        <Button className="mt-6" size="lg" variant="secondary" onClick={demo} loading={busy === 'demo'}>Use a demo connection</Button>
       </Panel>
     </div>
   );
@@ -297,7 +279,6 @@ function GoogleInner() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {data.reviewLink && <a href={data.reviewLink} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-white px-4 text-sm font-medium hover:border-brand-200">Review link <ExternalLink className="h-3.5 w-3.5" /></a>}
-                {acc.mode === 'demo' && <Button variant="secondary" loading={busy === 'sim'} onClick={() => action('sim', () => api('/google/demo/new-review', { body: {} }), (r) => `New ${r.review.rating}★ review from ${r.review.reviewer.name} — analysed and drafted`)} icon={<Zap className="h-4 w-4" />}>Simulate a new review</Button>}
                 {acc.mode === 'live' && acc.status !== 'needs_location' && <Button variant="secondary" loading={busy === 'sync'} onClick={() => action('sync', () => api('/google/sync', { method: 'POST' }), (r) => `${r.created} new of ${r.total} reviews`)} icon={<RefreshCw className="h-4 w-4" />}>Check for reviews</Button>}
                 {acc.mode === 'demo' && data.googleConfigured && <Button loading={busy === 'live'} onClick={async () => { setBusy('live'); try { const { url } = await api('/auth/google?format=json'); window.location.href = url; } catch (e: any) { toast(e.message, 'bad'); setBusy(''); } }} icon={<GoogleMark />}>Connect real profile</Button>}
                 <Button variant="danger" loading={busy === 'off'} onClick={() => window.confirm(acc.mode === 'demo' ? 'Disconnect and delete the demo reviews?' : 'Disconnect Google? Reviews stay in ReviewRankr, but no new ones will be imported.') && action('off', () => api('/google', { method: 'DELETE' }), () => 'Disconnected')} icon={<Unplug className="h-4 w-4" />}>Disconnect</Button>

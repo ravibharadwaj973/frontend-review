@@ -32,10 +32,10 @@ function AutopilotCard() {
     <Panel title={<h2 className="flex items-center gap-2 font-display text-[17px] font-semibold"><CalendarClock className="h-[18px] w-[18px] text-brand-500" />Autopilot this week</h2>} action={<Link href="/app/autopilot" className="text-sm font-medium text-brand-600 hover:underline">Open</Link>}>
       {!data.connection && <p className="-mt-1 mb-2 rounded-lg bg-brand-50 px-3 py-2 text-xs text-brand-700">Connect Google to switch autopilot on.</p>}
       <ul className="-mx-2 -my-1">
-        <Row icon={<MessageSquareText className="h-4 w-4" />} href="/app/reviews?filter=unanswered">
+        {data.connection?.ready && <Row icon={<MessageSquareText className="h-4 w-4" />} href="/app/reviews?filter=unanswered">
           {data.replies.auto ? <><span className="font-medium text-ink">{data.replies.auto}</span> AI repl{data.replies.auto === 1 ? 'y posts' : 'ies post'} by {data.replies.auto === 1 ? 'itself' : 'themselves'}</> : 'No replies waiting to post'}
           {data.replies.waitingApproval > 0 && <> · <span className="font-medium text-amber">{data.replies.waitingApproval} need your OK</span></>}
-        </Row>
+        </Row>}
         <Row icon={<Images className="h-4 w-4" />} href="/app/photos">
           <span className="font-medium text-ink">{data.photos.postedThisWeek}/{s.photos.perWeek}</span> photos posted{nextPhoto ? <> · next {when(nextPhoto.scheduledFor)}</> : data.photos.queued === 0 && s.photos.perWeek ? <> · <span className="text-amber">queue is empty</span></> : null}
         </Row>
@@ -139,12 +139,12 @@ export default function Dashboard() {
         <div>
           <h1 className="font-display text-[30px] font-semibold leading-tight sm:text-[34px]">{greeting()}, {user?.name?.split(' ')[0]}</h1>
           <p className="mt-1 text-[15px] text-ink-muted">
-            {o.unanswered ? <>{o.unanswered} review{o.unanswered > 1 ? 's' : ''} waiting for a reply{data.needsReply.some((r: any) => r.draft) ? ' — drafts are ready' : ''}.</> : 'Every review has a reply. Nice work.'}
+            {!o.total ? 'No Google reviews imported yet.' : !data.canReply ? 'Connect Google to manage review replies.' : o.unanswered ? <>{o.unanswered} review{o.unanswered > 1 ? 's' : ''} waiting for a reply{data.needsReply.some((r: any) => r.draft) ? ' — drafts are ready' : ''}.</> : 'Every review has a reply. Nice work.'}
             {data.google?.lastSyncAt && <> Last checked {timeAgo(data.google.lastSyncAt)}.</>}
           </p>
         </div>
         <div className="flex gap-2">
-          {data.google && <Button variant="secondary" onClick={sync} loading={syncing} icon={<RefreshCw className="h-4 w-4" />}>Check for reviews</Button>}
+          {data.canReply && <Button variant="secondary" onClick={sync} loading={syncing} icon={<RefreshCw className="h-4 w-4" />}>Check for reviews</Button>}
           <Button onClick={() => router.push('/app/requests?new=1')} icon={<Send className="h-4 w-4" />}>Ask for a review</Button>
         </div>
       </div>
@@ -201,7 +201,7 @@ export default function Dashboard() {
         <div className="min-w-0 space-y-6">
         <AutopilotCard />
         {/* Reply queue */}
-        <Panel title="Needs your reply" action={<Link href="/app/reviews?filter=unanswered" className="text-sm font-medium text-brand-600 hover:underline">All</Link>} padded={false}>
+        {data.canReply && <Panel title="Needs your reply" action={<Link href="/app/reviews?filter=unanswered" className="text-sm font-medium text-brand-600 hover:underline">All</Link>} padded={false}>
           {data.needsReply.length === 0 ? (
             <p className="px-5 pb-6 pt-3 text-sm text-ink-muted">You’re all caught up. New reviews appear here with a draft reply.</p>
           ) : (
@@ -228,7 +228,7 @@ export default function Dashboard() {
               ))}
             </ul>
           )}
-        </Panel>
+        </Panel>}
         <Panel title="Review requests" action={<Link href="/app/requests" className="text-sm font-medium text-brand-600 hover:underline">Open</Link>}>
           <Funnel
             steps={[
@@ -237,10 +237,10 @@ export default function Dashboard() {
               { label: 'Left a review', value: f.reviewed, note: 'Matched by reviewer name, or marked by you' },
             ]}
           />
-          <div className="mt-5 flex items-center justify-between rounded-xl bg-mist px-3 py-2.5 text-sm">
+          {data.canReply && <div className="mt-5 flex items-center justify-between rounded-xl bg-mist px-3 py-2.5 text-sm">
             <span className="text-ink-soft">AI replies published</span>
             <span className="font-display font-semibold tabular">{data.ai.published}<span className="font-sans text-xs font-normal text-ink-muted"> of {data.ai.generated} drafted</span></span>
-          </div>
+          </div>}
         </Panel>
         <QrCard />
         </div>

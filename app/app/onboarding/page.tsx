@@ -97,7 +97,7 @@ export default function Onboarding() {
       {step === 2 && (
         <Panel>
           <h1 className="font-display text-2xl font-semibold">Connect your Google profile</h1>
-          <p className="mt-1 text-ink-muted">Bring in your reviews, or explore with a demo connection first.</p>
+          <p className="mt-1 text-ink-muted">Import real customer reviews from your Google Business Profile.</p>
           <div className="mt-6 flex flex-wrap gap-2">
             <Button size="lg" onClick={() => router.push('/app/google')}>Connect Google</Button>
             <Button size="lg" variant="ghost" onClick={() => router.push('/app')}>I’ll do it later</Button>

@@ -63,7 +63,7 @@ function ReviewsInbox() {
 
   return (
     <>
-      <PageHeader title="Reviews" subtitle="Google reviews and reviews customers send in ReviewRankr, in one inbox. Open one to see the analysis and approve a reply." />
+      <PageHeader title="Reviews" subtitle="Google reviews and reviews customers send in ReviewRankr, in one inbox. " />
 
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <Segmented<Filter>
@@ -71,8 +71,10 @@ function ReviewsInbox() {
           onChange={(v) => { setFilter(v); setLimit(20); }}
           options={[
             { value: 'all', label: 'All', count: counts.all },
-            { value: 'unanswered', label: 'Needs reply', count: counts.unanswered },
-            { value: 'answered', label: 'Replied', count: counts.answered },
+            ...(data?.canReply ? [
+              { value: 'unanswered' as Filter, label: 'Needs reply', count: counts.unanswered },
+              { value: 'answered' as Filter, label: 'Replied', count: counts.answered },
+            ] : []),
             { value: 'positive', label: '4–5★', count: counts.positive },
             { value: 'neutral', label: '3★', count: counts.neutral },
             { value: 'negative', label: '1–2★', count: counts.negative },
@@ -111,7 +113,7 @@ function ReviewsInbox() {
           ) : (
             <>
               {reviews.map((r) => (
-                <ReviewRow key={r._id} review={r} selected={selected === r._id} onOpen={() => setSelected(r._id)} />
+                <ReviewRow key={r._id} canReply={data.canReply === true} review={r} selected={selected === r._id} onOpen={() => setSelected(r._id)} />
               ))}
               {data.total > reviews.length && (
                 <div className="p-4 text-center">

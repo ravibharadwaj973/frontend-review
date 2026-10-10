@@ -202,7 +202,7 @@ export default function AutopilotPage() {
 
       <div className="grid items-start gap-6 lg:grid-cols-2">
         {/* Replies */}
-        <Panel title={<CardTitle icon={<MessageSquareText className="h-4 w-4" />} title="AI replies to reviews" />}>
+        {data.connection?.ready && <Panel title={<CardTitle icon={<MessageSquareText className="h-4 w-4" />} title="AI replies to reviews" />}>
           <p className="-mt-1 mb-2 text-sm text-ink-muted">Every new review gets a reply written by AI in your voice. Choose which ones go out by themselves.</p>
           <div className="divide-y divide-line-soft">
             <RuleRow label="5 stars" stars={5} value={s.replyRules.five} onChange={(v) => save({ replyRules: { five: v } })} />
@@ -231,7 +231,7 @@ export default function AutopilotPage() {
               <Button size="sm" variant="ai" onClick={backlog} loading={busy === 'backlog'} icon={<Sparkles className="h-3.5 w-3.5" />}>Write replies for them</Button>
             </div>
           )}
-        </Panel>
+        </Panel>}
 
         {/* Photos */}
         <Panel title={<CardTitle icon={<Images className="h-4 w-4" />} title="Weekly photos" tag={!s.photos.enabled || !s.photos.perWeek ? <Badge>Off</Badge> : undefined} />} action={<Link href="/app/photos" className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 hover:underline">Photos <ArrowUpRight className="h-3.5 w-3.5" /></Link>}>

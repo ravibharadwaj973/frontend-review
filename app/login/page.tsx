@@ -20,10 +20,6 @@ function LoginForm() {
   const next = /^\/app(\/[A-Za-z0-9/_-]*)?$/.test(nextParam) ? nextParam : '/app';
 
   useEffect(() => {
-    if (params.get('demo')) {
-      setEmail('demo@reviewrankr.app');
-      setPassword('reviewrankr123');
-    }
     if (params.get('expired')) setError('Your session expired. Sign in again.');
   }, [params]);
 
@@ -55,9 +51,6 @@ function LoginForm() {
       </Field>
       {error && <p className="rounded-lg bg-rose-soft px-3 py-2 text-sm text-rose">{error}</p>}
       <Button type="submit" size="lg" className="w-full" loading={busy}>Sign in</Button>
-      {params.get('demo') && (
-        <p className="text-xs text-ink-muted">Demo details are filled in. Run <code className="rounded bg-white px-1">npm run seed</code> in the backend first if sign-in fails.</p>
-      )}
     </form>
   );
 }

@@ -36,7 +36,7 @@ export function StatusPill({ review }: { review: Review }) {
   return <Badge tone={review.rating <= 2 ? 'bad' : 'neutral'}>Needs reply</Badge>;
 }
 
-export function ReviewRow({ review, onOpen, selected }: { review: Review; onOpen: () => void; selected?: boolean }) {
+export function ReviewRow({ review, onOpen, selected, canReply = false }: { review: Review; onOpen: () => void; selected?: boolean; canReply?: boolean }) {
   return (
     <button
       onClick={onOpen}
@@ -59,7 +59,7 @@ export function ReviewRow({ review, onOpen, selected }: { review: Review; onOpen
             {review.comment || 'Rating only — no written review'}
           </p>
           <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-            <StatusPill review={review} />
+            {canReply && <StatusPill review={review} />}
             {review.analysis?.services?.slice(0, 2).map((s) => <Badge key={s}>{s}</Badge>)}
             {review.analysis?.negatives?.slice(0, 2).map((n) => <span key={n} className="rounded-full bg-critique-soft px-2 py-0.5 text-xs font-medium text-[#A33B22]">− {n}</span>)}
           </div>
@@ -226,13 +226,13 @@ export function ReplyComposer({ review, onChanged, compact }: { review: Review; 
 
 export function ReviewDetail({ reviewId, onClose, onChanged }: { reviewId: string; onClose: () => void; onChanged: () => void }) {
   const toast = useToast();
-  const [data, setData] = useState<{ review: Review; responses: any[] } | null>(null);
+  const [data, setData] = useState<{ review: Review; responses: any[]; canReply: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
 
   const load = async () => {
     const res = await api(`/reviews/${reviewId}`);
     const draft = res.responses.find((r: any) => r.status === 'draft' || r.status === 'approved') || null;
-    setData({ review: { ...res.review, draft }, responses: res.responses });
+    setData({ review: { ...res.review, draft }, responses: res.responses, canReply: res.canReply === true });
   };
   useEffect(() => {
     setData(null);
@@ -270,7 +270,7 @@ export function ReviewDetail({ reviewId, onClose, onChanged }: { reviewId: strin
   return (
     <div>
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-line-soft bg-mist/95 px-6 py-4 backdrop-blur">
-        <div className="flex items-center gap-2"><StatusPill review={r} /><span className="text-xs text-ink-muted">{shortDate(r.createTime)}</span></div>
+        <div className="flex items-center gap-2">{data.canReply && <StatusPill review={r} />}<span className="text-xs text-ink-muted">{shortDate(r.createTime)}</span></div>
         <button onClick={onClose} className="rounded-lg p-1.5 text-ink-muted hover:bg-white" aria-label="Close"><X className="h-5 w-5" /></button>
       </header>
       <div className="space-y-6 px-6 py-6">
@@ -301,7 +301,7 @@ export function ReviewDetail({ reviewId, onClose, onChanged }: { reviewId: strin
           <AnalysisPanel review={r} onReanalyze={reanalyze} busy={busy} />
         </section>
 
-        <section>
+        {data.canReply && <section>
           <h3 className="mb-2 font-display text-[15px] font-semibold">Your reply</h3>
           {r.reply?.comment ? (
             <div className="rounded-xl bg-white p-4">
@@ -317,9 +317,9 @@ export function ReviewDetail({ reviewId, onClose, onChanged }: { reviewId: strin
           ) : (
             <ReplyComposer review={r} onChanged={() => { load(); onChanged(); }} />
           )}
-        </section>
+        </section>}
 
-        {data.responses.length > 0 && (
+        {data.canReply && data.responses.length > 0 && (
           <section>
             <h3 className="mb-2 font-display text-[15px] font-semibold">Draft history</h3>
             <ul className="space-y-2">

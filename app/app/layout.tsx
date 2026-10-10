@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { BarChart3, Building2, CalendarClock, CreditCard, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, PauseCircle, QrCode, Send, Settings, Shield, Users, X, RefreshCw } from 'lucide-react';
+import { BarChart3, Building2, CalendarClock, CreditCard, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, PauseCircle, QrCode, Send, Settings, Shield, Sparkles, Users, X, RefreshCw } from 'lucide-react';
 import { BillingView } from '@/components/app/BillingView';
 import { Logo } from '@/components/app/Logo';
 import { Avatar, Spinner } from '@/components/ui';
@@ -14,6 +14,7 @@ import { cx } from '@/lib/format';
 const NAV = [
   { href: '/app', label: 'Home', icon: Home },
   { href: '/app/reviews', label: 'Reviews', icon: MessageSquareText, badge: 'unanswered' },
+  { href: '/app/generated-reviews', label: 'Generated reviews', icon: Sparkles },
   { href: '/app/requests', label: 'Review requests', icon: Send },
   { href: '/app/share', label: 'QR code & sharing', icon: QrCode },
   { href: '/app/customers', label: 'Customers', icon: Users },
