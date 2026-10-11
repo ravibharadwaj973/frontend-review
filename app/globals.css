@@ -13,7 +13,7 @@ body {
   font-feature-settings: 'ss01', 'cv11';
 }
 
-h1, h2, h3, .font-display { font-family: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.02em; }
+h1, h2, h3, .font-display { font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
 .tabular { font-variant-numeric: tabular-nums; }
 
 :focus-visible { outline: 2px solid #2F6FED; outline-offset: 2px; border-radius: 6px; }

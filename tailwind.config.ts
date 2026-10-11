@@ -20,8 +20,8 @@ export default {
         critique: { DEFAULT: '#D3553A', soft: '#FBE6E0' },
       },
       fontFamily: {
-        display: ['"Bricolage Grotesque Variable"', '"Bricolage Grotesque"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        sans: ['"Instrument Sans Variable"', '"Instrument Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: { xl2: '1.25rem', xl3: '1.75rem' },
       boxShadow: {

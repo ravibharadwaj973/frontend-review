@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+import { fileURLToPath } from 'node:url';
 
 /**
  * BACKEND_URL is the one setting that connects the website to the API.
@@ -30,9 +30,15 @@ if (!/^https?:\/\//.test(BACKEND_URL)) {
 
 const nextConfig = {
   output: 'standalone',
+  outputFileTracingRoot: fileURLToPath(new URL('.', import.meta.url)),
+  distDir: process.env.REVIEWRANKR_BUILD_DIR || '.next',
   reactStrictMode: true,
   poweredByHeader: false,
   env: { NEXT_PUBLIC_BACKEND_ORIGIN: BACKEND_URL },
+  webpack(config) {
+    config.resolve.alias['@'] = fileURLToPath(new URL('.', import.meta.url));
+    return config;
+  },
   async rewrites() {
     return [
       { source: '/api/:path*', destination: `${BACKEND_URL}/api/:path*` },

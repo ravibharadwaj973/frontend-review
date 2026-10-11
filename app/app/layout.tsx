@@ -1,15 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { BarChart3, Building2, CalendarClock, CreditCard, Globe, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, PauseCircle, QrCode, Send, Settings, Shield, Sparkles, Users, X, RefreshCw } from 'lucide-react';
-import { BillingView } from '@/components/app/BillingView';
 import { Logo } from '@/components/app/Logo';
-import { Avatar, Spinner } from '@/components/ui';
+import { Avatar, Skeleton, Spinner } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
 import { cx } from '@/lib/format';
+
+const BillingView = dynamic(() => import('@/components/app/BillingView').then((mod) => mod.BillingView), {
+  loading: () => <Skeleton className="h-64" />,
+});
 
 const NAV = [
   { href: '/app', label: 'Home', icon: Home },
@@ -66,6 +70,7 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               onClick={onNavigate}
               aria-current={active ? 'page' : undefined}
               className={cx(
