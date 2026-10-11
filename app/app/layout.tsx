@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { BarChart3, Building2, CalendarClock, CreditCard, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, PauseCircle, QrCode, Send, Settings, Shield, Sparkles, Users, X, RefreshCw } from 'lucide-react';
+import { BarChart3, Building2, CalendarClock, CreditCard, Globe, HelpCircle, Home, Images, LogOut, Megaphone, Menu, MessageSquareText, PauseCircle, QrCode, Send, Settings, Shield, Sparkles, Users, X, RefreshCw } from 'lucide-react';
 import { BillingView } from '@/components/app/BillingView';
 import { Logo } from '@/components/app/Logo';
 import { Avatar, Spinner } from '@/components/ui';
@@ -19,13 +19,18 @@ const NAV = [
   { href: '/app/share', label: 'QR code & sharing', icon: QrCode },
   { href: '/app/customers', label: 'Customers', icon: Users },
   { href: '/app/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/app/performance', label: 'Google Performance', icon: BarChart3 },
   { section: 'Keep Google active' },
   { href: '/app/autopilot', label: 'Autopilot', icon: CalendarClock },
   { href: '/app/posts', label: 'Google posts', icon: Megaphone },
   { href: '/app/photos', label: 'Weekly photos', icon: Images },
+  { href: '/app/media', label: 'Photos & videos', icon: Images },
   { href: '/app/questions', label: 'Customer questions', icon: HelpCircle },
   { section: 'Your presence' },
   { href: '/app/profile', label: 'Business profile', icon: Building2 },
+  { href: '/app/website-audit', label: 'Website SEO Audit', icon: BarChart3 },
+  { href: '/app/locations', label: 'Location accuracy', icon: Building2 },
+  { href: '/app/prominence', label: 'Web reputation', icon: Globe },
   { href: '/app/google', label: 'Google profile', icon: RefreshCw },
   { href: '/app/billing', label: 'Billing', icon: CreditCard },
   { href: '/app/settings', label: 'Settings', icon: Settings },

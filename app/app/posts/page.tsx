@@ -84,7 +84,7 @@ function PostPreview({ post, businessName }: { post: Partial<Post>; businessName
 
 function PhotoPicker({ value, onChange }: { value?: string | null; onChange: (p: any | null) => void }) {
   const { data } = useSWR('/photos');
-  const photos = (data?.photos || []).filter((p: any) => p.category !== 'logo');
+  const photos = (data?.photos || []).filter((p: any) => p.category !== 'logo' && p.mediaType !== 'video' && p.approval?.status === 'approved');
   if (!data) return <Skeleton className="h-20" />;
   if (!photos.length) return <p className="text-sm text-ink-muted">No photos yet. <Link href="/app/photos" className="text-brand-600 hover:underline">Upload photos</Link> to add one.</p>;
   return (

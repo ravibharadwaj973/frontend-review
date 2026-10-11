@@ -9,10 +9,12 @@ import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { CATEGORIES, DAYS, PHOTO_CATEGORIES } from '@/lib/constants';
 import { ServiceFinder } from '@/components/app/ServiceFinder';
+import { ProfileAudit } from '@/components/app/ProfileAudit';
+import { MediaPreview } from '@/components/app/MediaPreview';
 import { cx, inr } from '@/lib/format';
 import { shrinkImage } from '@/lib/image';
 
-type Tab = 'info' | 'hours' | 'services' | 'photos' | 'links' | 'description';
+type Tab = 'audit' | 'info' | 'hours' | 'services' | 'photos' | 'links' | 'description';
 
 /* Shared: edit a slice of the business and save it ------------------------ */
 
@@ -500,7 +502,7 @@ function PhotosTab() {
           {data.photos.map((p: any) => (
             <li key={p._id} className="overflow-hidden rounded-xl2 bg-white shadow-lift">
               <div className="relative aspect-[4/3] bg-mist">
-                <img src={p.fileUrl} alt={p.caption || p.category} className="h-full w-full object-cover" loading="lazy" />
+                <MediaPreview media={p} className="h-full w-full object-cover" />
                 <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-xs font-medium">{PHOTO_CATEGORIES.find((c) => c.value === p.category)?.label}</span>
                 <button onClick={() => remove(p)} className="absolute right-2 top-2 rounded-full bg-white/90 p-1.5 text-ink-muted hover:text-rose" aria-label="Delete photo"><Trash2 className="h-3.5 w-3.5" /></button>
               </div>
@@ -626,7 +628,8 @@ function DescriptionTab() {
 function ProfileInner() {
   const params = useSearchParams();
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>((params.get('tab') as Tab) || 'info');
+  const [tab, setTab] = useState<Tab>((params.get('tab') as Tab) || 'audit');
+  useEffect(() => setTab((params.get('tab') as Tab) || 'audit'), [params]);
   const change = (t: Tab) => { setTab(t); router.replace(`/app/profile?tab=${t}`, { scroll: false }); };
   return (
     <>
@@ -636,6 +639,7 @@ function ProfileInner() {
           value={tab}
           onChange={change}
           options={[
+            { value: 'audit', label: 'Profile audit' },
             { value: 'info', label: 'Basic information' },
             { value: 'hours', label: 'Hours' },
             { value: 'services', label: 'Services / menu' },
@@ -645,6 +649,7 @@ function ProfileInner() {
           ]}
         />
       </div>
+      {tab === 'audit' && <ProfileAudit />}
       {tab === 'info' && <InfoTab />}
       {tab === 'hours' && <HoursTab />}
       {tab === 'services' && <ServicesTab />}

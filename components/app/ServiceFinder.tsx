@@ -83,7 +83,7 @@ export function useServiceDiscovery() {
     setError('');
     try {
       const res = await api('/services/discover', { body: { source, url: url || undefined } });
-      setItems(res.services.map((s: Found) => ({ ...s, _on: true })));
+      setItems(res.services.map((s: Found) => ({ ...s, _on: source !== 'ai', ...(source === 'ai' ? { price: null, duration: null } : {}) })));
       setModel(res.model);
       if (!res.services.length) setError('Nothing new found — your list may already have these.');
     } catch (e: any) {
@@ -150,7 +150,7 @@ export function ServiceFinder({ open, onClose, onDone, website }: { open: boolea
 
       <div className="mt-4">
         {source === 'ai' && (
-          <p className="flex items-start gap-2 text-sm text-ink-muted"><Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-violet" />A full list of what businesses like yours usually offer, with typical prices. Untick what you don’t do and fix prices to match yours.</p>
+          <p className="flex items-start gap-2 text-sm text-ink-muted"><Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-violet" />Possible services for your business type. Select only what you actually offer and enter your real prices.</p>
         )}
         {source === 'website' && (
           <div>

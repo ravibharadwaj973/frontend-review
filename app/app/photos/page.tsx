@@ -82,7 +82,7 @@ export default function WeeklyPhotosPage() {
   const perWeek = s.enabled === false ? 0 : s.perWeek;
   const next = data.queue.find((p: any) => p.scheduledFor);
   const queuedIds = new Set(data.queue.map((p: any) => p._id));
-  const unqueued = (lib?.photos || []).filter((p: any) => !queuedIds.has(p._id) && !p.postedAt && !['logo', 'cover'].includes(p.category) && p.google?.syncStatus !== 'failed');
+  const unqueued = (lib?.photos || []).filter((p: any) => p.mediaType !== 'video' && p.approval?.status === 'approved' && !queuedIds.has(p._id) && !p.postedAt && !['logo', 'cover'].includes(p.category) && p.google?.syncStatus !== 'failed');
   const demo = data.connection === 'demo';
 
   return (
@@ -93,6 +93,7 @@ export default function WeeklyPhotosPage() {
         actions={<Button onClick={() => fileRef.current?.click()} loading={busy === 'upload'} icon={<Upload className="h-4 w-4" />}>Upload photos</Button>}
       />
       <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" multiple hidden onChange={(e) => upload(e.target.files)} />
+      <Link href="/app/media" className="mb-5 block text-sm font-medium text-brand-600">Review and approve photos in your media library</Link>
 
       {!data.connection && (
         <div className="mb-5 flex items-center gap-3 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-ink-soft">

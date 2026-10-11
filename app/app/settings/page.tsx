@@ -86,7 +86,7 @@ export default function SettingsPage() {
           <Panel title="Automation">
             <div className="divide-y divide-line-soft">
               <Toggle checked={automation.autoAnalyze !== false} onChange={(v) => setAutomation({ ...automation, autoAnalyze: v })} label="Analyse new reviews" description="Sentiment, services and issues for every review as it arrives." />
-              <Toggle checked={automation.autoDraftReplies !== false} onChange={(v) => setAutomation({ ...automation, autoDraftReplies: v })} label="Draft replies automatically" description="AI writes a reply for every new review. Your reply rules decide which ones post by themselves." />
+              <Toggle checked={automation.autoDraftReplies !== false} onChange={(v) => setAutomation({ ...automation, autoDraftReplies: v })} label="Draft replies automatically" description="AI writes a reply for every new review. Every reply waits for your approval." />
               <div className="flex items-start justify-between gap-6 py-3">
                 <span>
                   <span className="block text-[15px] font-medium text-ink">Post AI replies automatically</span>

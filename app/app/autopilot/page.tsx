@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import useSWR from 'swr';
 import { AlertTriangle, ArrowUpRight, CalendarDays, Clock, HelpCircle, Images, Megaphone, MessageSquareText, Minus, Play, Plus, Sparkles } from 'lucide-react';
-import { Badge, Button, PageHeader, Panel, Select, Skeleton, Stars, Toggle, useToast } from '@/components/ui';
+import { Badge, Button, PageHeader, Panel, Select, Skeleton, Toggle, useToast } from '@/components/ui';
 import { api } from '@/lib/api';
 import { clock, cx, relDay, ymdLabel } from '@/lib/format';
 
@@ -75,27 +75,6 @@ function Week({ week }: { week: any[] }) {
         </ol>
       </div>
     </Panel>
-  );
-}
-
-function RuleRow({ label, stars, value, onChange }: { label: string; stars: number; value: Rule; onChange: (v: Rule) => void }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 py-2.5">
-      <span className="flex items-center gap-2 text-sm"><Stars value={stars} size={13} /><span className="text-ink-muted">{label}</span></span>
-      <div className="inline-flex rounded-lg bg-mist p-0.5" role="radiogroup" aria-label={`${label} reviews`}>
-        {(['auto', 'approve'] as Rule[]).map((v) => (
-          <button
-            key={v}
-            role="radio"
-            aria-checked={value === v}
-            onClick={() => onChange(v)}
-            className={cx('h-8 rounded-md px-3 text-[13px] font-medium transition-colors', value === v ? 'bg-white text-brand-700 shadow-sm' : 'text-ink-muted hover:text-ink')}
-          >
-            {v === 'auto' ? 'Post automatically' : 'I approve first'}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -203,24 +182,9 @@ export default function AutopilotPage() {
       <div className="grid items-start gap-6 lg:grid-cols-2">
         {/* Replies */}
         {data.connection?.ready && <Panel title={<CardTitle icon={<MessageSquareText className="h-4 w-4" />} title="AI replies to reviews" />}>
-          <p className="-mt-1 mb-2 text-sm text-ink-muted">Every new review gets a reply written by AI in your voice. Choose which ones go out by themselves.</p>
-          <div className="divide-y divide-line-soft">
-            <RuleRow label="5 stars" stars={5} value={s.replyRules.five} onChange={(v) => save({ replyRules: { five: v } })} />
-            <RuleRow label="4 stars" stars={4} value={s.replyRules.four} onChange={(v) => save({ replyRules: { four: v } })} />
-            <RuleRow label="3 stars" stars={3} value={s.replyRules.three} onChange={(v) => save({ replyRules: { three: v } })} />
-            <RuleRow label="1–2 stars" stars={1.5} value={s.replyRules.low} onChange={(v) => save({ replyRules: { low: v } })} />
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-line-soft pt-4">
-            <Clock className="h-4 w-4 text-ink-faint" />
-            <span className="text-sm text-ink-soft">Post automatic replies</span>
-            <Select className="h-9 w-auto py-1 text-sm" value={String(s.replyDelayMinutes)} onChange={(e) => save({ replyDelayMinutes: Number(e.target.value) })} aria-label="Delay before posting">
-              {[[0, 'straight away'], [15, 'after 15 minutes'], [30, 'after 30 minutes'], [60, 'after 1 hour'], [180, 'after 3 hours'], [720, 'after 12 hours']].map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-            </Select>
-          </div>
-          <p className="mt-2 text-xs text-ink-muted">You can edit or hold any reply before it posts. Reviews that look urgent, or that mention a problem, always wait for you.</p>
+          <p className="-mt-1 mb-2 text-sm text-ink-muted">AI writes reply drafts in your voice. Every reply waits for business approval before publishing.</p>
 
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            <Stat value={r.auto} label={r.nextAuto?.[0] ? `posting by itself · next ${clock(r.nextAuto[0].autoPublishAt)}` : 'posting by itself'} href="/app/reviews?filter=unanswered" />
+          <div className="mt-4 grid grid-cols-2 gap-2">
             <Stat value={r.waitingApproval} label="waiting for your OK" href="/app/reviews?filter=unanswered" tone={r.waitingApproval ? 'warn' : undefined} />
             <Stat value={r.repliedThisWeek} label="replied this week" />
           </div>
@@ -254,7 +218,7 @@ export default function AutopilotPage() {
             <p className="mt-3 rounded-lg bg-amber-soft px-3 py-2 text-sm text-amber">Add more photos — the queue has {photosLeft === 0 ? 'none' : `only ${photosLeft}`} left for this week.</p>
           )}
           <div className="mt-2 border-t border-line-soft">
-            <Toggle checked={s.photos.autoQueueUploads} onChange={(v) => save({ photos: { autoQueueUploads: v } })} label="Queue new uploads automatically" description="Photos you upload join the weekly queue (logo and cover photos never do)." />
+            <Toggle checked={s.photos.autoQueueUploads} onChange={(v) => save({ photos: { autoQueueUploads: v } })} label="Queue approved photos automatically" description="Approved photos join the weekly queue. Logo, cover and videos stay outside the weekly queue." />
           </div>
         </Panel>
 
