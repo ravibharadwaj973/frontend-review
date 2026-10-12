@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'node:url';
+import { securityHeaders } from './lib/security-headers.mjs';
 
 /**
  * BACKEND_URL is the one setting that connects the website to the API.
@@ -35,6 +36,9 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   env: { NEXT_PUBLIC_BACKEND_ORIGIN: BACKEND_URL },
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders({ production: process.env.NODE_ENV === 'production', includeSubdomains: process.env.HSTS_INCLUDE_SUBDOMAINS === 'true' }) }];
+  },
   webpack(config) {
     config.resolve.alias['@'] = fileURLToPath(new URL('.', import.meta.url));
     return config;

@@ -34,7 +34,7 @@ export default function SignupPage() {
   };
 
   return (
-    <AuthShell title="Set up your business" subtitle="Takes about three minutes. You can connect Google afterwards." footer={<>Already have an account? <Link href="/login" className="font-medium text-brand-600 hover:underline">Sign in</Link></>}>
+    <AuthShell title="Set up your business" subtitle="Takes about three minutes. You can connect Google afterwards." footer={<>Already have an account? <Link href="/login" prefetch={false} className="font-medium text-brand-600 hover:underline">Sign in</Link></>}>
       <form onSubmit={submit} className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Business name" error={errors.businessName}><Input value={form.businessName} onChange={set('businessName')} required placeholder="Glow Studio" /></Field>

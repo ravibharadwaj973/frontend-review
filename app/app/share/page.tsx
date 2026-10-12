@@ -178,8 +178,14 @@ export default function SharePage() {
   const print = () => {
     const w = window.open('', '_blank');
     if (!w) return toast('Allow pop-ups to print the poster', 'bad');
-    w.document.write(`<!doctype html><title>${name} — review poster</title><style>@page{size:A5;margin:0}html,body{margin:0;height:100%}img{width:100%;height:100%;object-fit:contain;display:block}</style><img src="${poster}" onload="setTimeout(()=>{window.print()},200)">`);
-    w.document.close();
+    w.document.title = `${name} — review poster`;
+    const style = w.document.createElement('style');
+    style.textContent = '@page{size:A5;margin:0}html,body{margin:0;height:100%}img{width:100%;height:100%;object-fit:contain;display:block}';
+    const image = w.document.createElement('img');
+    image.addEventListener('load', () => setTimeout(() => w.print(), 200));
+    image.src = poster;
+    w.document.head.append(style);
+    w.document.body.append(image);
   };
 
   const copyLink = async () => {

@@ -1,0 +1,12 @@
+export type Metrics = { total: number; checked: number; unknown: number; visible: number; notVisible: number; visibility: number | null; average: number | null; median: number | null; best: number | null; worst: number | null; top3: number | null; top10: number | null; top20: number | null };
+export type Result = { position: number; placeId: string; title: string; address: string; rating?: number };
+export type Point = { index: number; row: number; column: number; latitude: number; longitude: number; status: string; rank: number | null; checkedAt?: string; error?: string; results: Result[] };
+export type Center = { latitude: number; longitude: number };
+export type Settings = { placeId: string; center: Center | null; keywords: string[]; language: string; coordinateSource?: string; coordinateExpiresAt?: string };
+export type Scan = { _id: string; businessName: string; placeId: string; keyword: string; center: Center; radiusKm: number; gridSize: number; rankingRange: number; language: string; provider: string; signature: string; status: string; active: boolean; createdAt: string; completedAt?: string; error?: string; summary: Metrics; points?: Point[]; visibilityChange?: number | null };
+export type Overview = { provider: { configured: boolean; name: string }; geocodingConfigured?: boolean; settings: Settings | null; suggestedCenter: Center | null; active: Scan | null; latest: Scan[] };
+export type Detail = { scan: Scan & { points: Point[] }; competitors: (Metrics & { placeId: string; title: string; own: boolean })[]; regions: (Metrics & { area: string })[]; recommendations: { title: string; detail: string; href: string }[]; baseline: Scan | null; comparison: { comparable: boolean; reason?: string; before?: Metrics; current?: Metrics; visibilityChange?: number; averageImprovement?: number | null } };
+export const rankText = (n: number | null | undefined) => n == null ? '-' : `#${n}`;
+export const percent = (n: number | null | undefined) => n == null ? '-' : `${n}%`;
+export const observedRank = (point: Point, placeId: string, ownId: string) => placeId === ownId ? point.rank : point.results.find(r => r.placeId === placeId)?.position ?? null;
+export const pointColor = (point: Point, rank: number | null, range: number, thresholds: number[]) => point.status !== 'checked' ? '#64748b' : rank === null || rank > range ? '#c2364c' : rank <= thresholds[0] ? '#1d8257' : rank <= thresholds[1] ? '#c69018' : rank <= thresholds[2] ? '#d66b25' : '#c2364c';

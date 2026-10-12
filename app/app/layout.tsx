@@ -24,6 +24,7 @@ const NAV = [
   { href: '/app/customers', label: 'Customers', icon: Users },
   { href: '/app/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/app/performance', label: 'Google Performance', icon: BarChart3 },
+  { href: '/app/map-visibility', label: 'Local Map Visibility', icon: Globe },
   { section: 'Keep Google active' },
   { href: '/app/autopilot', label: 'Autopilot', icon: CalendarClock },
   { href: '/app/posts', label: 'Google posts', icon: Megaphone },

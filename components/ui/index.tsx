@@ -103,9 +103,9 @@ export function Toggle({ checked, onChange, label, description, disabled }: { ch
 
 export function Stars({ value, size = 14, className }: { value: number; size?: number; className?: string }) {
   return (
-    <span className={cx('inline-flex items-center gap-0.5', className)} aria-label={`${value} out of 5 stars`}>
+    <span className={cx('inline-flex items-center gap-0.5', className)} role="img" aria-label={`${value} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star key={i} width={size} height={size} className={i <= Math.round(value) ? 'fill-star text-star' : 'fill-line text-line'} strokeWidth={1.5} />
+        <Star key={i} aria-hidden="true" width={size} height={size} className={i <= Math.round(value) ? 'fill-star text-star' : 'fill-line text-line'} strokeWidth={1.5} />
       ))}
     </span>
   );
