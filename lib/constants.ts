@@ -1,5 +1,10 @@
 export const CATEGORIES = ['Beauty salon', 'Hair salon', 'Spa', 'Barbershop', 'Gym', 'Yoga studio', 'Dental clinic', 'Medical clinic', 'Physiotherapy', 'Restaurant', 'Cafe', 'Hotel', 'Other'];
 
+export const INDIAN_REGIONS = {
+  States: ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'],
+  'Union Territories': ['Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'],
+};
+
 export const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
 
 export const PHOTO_CATEGORIES: { value: string; label: string }[] = [

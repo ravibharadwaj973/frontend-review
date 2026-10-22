@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
-import { Button, Field, Input, Panel, useToast } from '@/components/ui';
+import { Button, Field, Input, Panel, Select, useToast } from '@/components/ui';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { cx } from '@/lib/format';
 import { AiMark, Skeleton } from '@/components/ui';
 import { FoundServicesList, useServiceDiscovery } from '@/components/app/ServiceFinder';
+import { INDIAN_REGIONS } from '@/lib/constants';
 
 const STEPS = ['Your business', 'Services', 'Google'];
 
@@ -18,13 +19,13 @@ export default function Onboarding() {
   const toast = useToast();
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [info, setInfo] = useState({ phone: business?.phone || '', line1: business?.address?.line1 || '', city: business?.address?.city || '', website: business?.links?.website || '' });
+  const [info, setInfo] = useState({ phone: business?.phone || '', line1: business?.address?.line1 || '', city: business?.address?.city || '', state: business?.address?.state || '', website: business?.links?.website || '' });
   const discovery = useServiceDiscovery();
 
   const saveInfo = async () => {
     setBusy(true);
     try {
-      const res = await api('/business', { method: 'PATCH', body: { phone: info.phone, address: { line1: info.line1, city: info.city }, links: { website: info.website } } });
+      const res = await api('/business', { method: 'PATCH', body: { phone: info.phone, address: { ...business?.address, line1: info.line1, city: info.city, state: info.state }, links: { website: info.website } } });
       setBusiness(res.business);
       setStep(1);
       discovery.find('ai');
@@ -65,8 +66,15 @@ export default function Onboarding() {
           <div className="mt-6 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Phone"><Input value={info.phone} onChange={(e) => setInfo({ ...info, phone: e.target.value })} inputMode="tel" /></Field>
-              <Field label="City"><Input value={info.city} onChange={(e) => setInfo({ ...info, city: e.target.value })} /></Field>
+              <Field label="City"><Input autoComplete="address-level2" value={info.city} onChange={(e) => setInfo({ ...info, city: e.target.value })} /></Field>
             </div>
+            <Field label="State / Union Territory">
+              <Select autoComplete="address-level1" value={info.state} onChange={e => setInfo({ ...info, state: e.target.value })}>
+                <option value="">Select state or union territory</option>
+                {info.state && !Object.values(INDIAN_REGIONS).flat().includes(info.state) && <option value={info.state}>{info.state}</option>}
+                {Object.entries(INDIAN_REGIONS).map(([group, names]) => <optgroup key={group} label={group}>{names.map(name => <option key={name} value={name}>{name}</option>)}</optgroup>)}
+              </Select>
+            </Field>
             <Field label="Street address"><Input value={info.line1} onChange={(e) => setInfo({ ...info, line1: e.target.value })} /></Field>
             <Field label="Website (optional)"><Input type="url" value={info.website} onChange={(e) => setInfo({ ...info, website: e.target.value })} placeholder="https://" /></Field>
           </div>

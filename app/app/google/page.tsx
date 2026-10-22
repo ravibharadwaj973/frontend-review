@@ -70,9 +70,17 @@ function Connect({ googleConfigured, onDone }: { googleConfigured: boolean; onDo
   );
 }
 
-function LocationPicker({ onDone }: { onDone: () => void }) {
+function GoogleConnectionError({ message, details }: { message: string; details?: Record<string, string> }) {
+  const labels: Record<string, string> = { operation: 'Failed step', request: 'Google endpoint', googleHttpStatus: 'Google HTTP status', googleStatus: 'Google status', googleReasons: 'Google reason', googleMessage: 'Google message', grantedScopes: 'Granted scopes', guidance: 'Next check' };
+  return <div role="alert" className="min-w-0 space-y-3 text-sm">
+    <p className="break-words text-rose">{message}</p>
+    {details && <dl className="space-y-2 border-l-2 border-line pl-3">{Object.entries(labels).map(([key, label]) => details[key] ? <div key={key}><dt className="font-medium text-ink">{label}</dt><dd className="break-words text-ink-muted [overflow-wrap:anywhere]">{details[key]}</dd></div> : null)}</dl>}
+  </div>;
+}
+
+function LocationPicker({ onDone, lastError, lastErrorDetails }: { onDone: () => void; lastError?: string; lastErrorDetails?: Record<string, string> }) {
   const toast = useToast();
-  const { data, error } = useSWR('/google/locations');
+  const { data, error, mutate } = useSWR('/google/locations', { shouldRetryOnError: false });
   const [busy, setBusy] = useState('');
   const choose = async (locationName: string) => {
     setBusy(locationName);
@@ -87,8 +95,14 @@ function LocationPicker({ onDone }: { onDone: () => void }) {
     }
   };
   return (
-    <Panel title="Choose your location">
-      {error ? <p className="text-sm text-rose">{error.message}</p> : !data ? <Skeleton className="h-24" /> : !data.locations.length ? (
+    <Panel title={error || (!data && lastError) ? 'Could not load business locations' : 'Choose your location'}>
+      {error || (!data && lastError) ? <>
+        <GoogleConnectionError message={error?.message || lastError!} details={error?.details || lastErrorDetails} />
+        <Button className="mt-4" variant="secondary" loading={busy === 'retry'} icon={<RefreshCw className="h-4 w-4" />} onClick={async () => {
+          setBusy('retry');
+          try { await mutate(); onDone(); } catch { /* The latest error stays visible above. */ } finally { setBusy(''); }
+        }}>Retry loading locations</Button>
+      </> : !data ? <Skeleton className="h-24" /> : !data.locations.length ? (
         <Empty title="No locations on this Google account">Sign in with the account that manages your Business Profile, or check that the profile is verified.</Empty>
       ) : (
         <ul className="divide-y divide-line-soft">
@@ -270,14 +284,15 @@ function GoogleInner() {
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-mist">{acc.mode === 'demo' ? <FlaskConical className="h-5 w-5 text-brand-500" /> : <GoogleMark />}</span>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="font-display text-xl font-semibold">{acc.locationTitle || 'Choose a location'}</h2>
-                    {acc.mode === 'demo' ? <Badge tone="info">Demo connection</Badge> : acc.status === 'connected' ? <Badge tone="good">Connected</Badge> : acc.status === 'needs_location' ? <Badge tone="warn">Pick a location</Badge> : <Badge tone="bad">Needs attention</Badge>}
+                    <h2 className="font-display text-xl font-semibold">{acc.locationTitle || (acc.lastError ? 'Google connection needs attention' : 'Choose a location')}</h2>
+                    {acc.mode === 'demo' ? <Badge tone="info">Demo connection</Badge> : acc.status === 'connected' ? <Badge tone="good">Connected</Badge> : acc.status === 'needs_location' && !acc.lastError ? <Badge tone="warn">Pick a location</Badge> : <Badge tone="bad">Needs attention</Badge>}
                   </div>
                   <p className="mt-0.5 text-sm text-ink-muted">{acc.email}{acc.lastSyncAt && ` · reviews checked ${timeAgo(acc.lastSyncAt)}`}</p>
-                  {acc.lastError && <p className="mt-1 text-sm text-rose">{acc.lastError}</p>}
+                  {acc.lastError && acc.status !== 'needs_location' && <GoogleConnectionError message={acc.lastError} details={acc.lastErrorDetails} />}
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
+                {acc.mode === 'live' && (acc.lastError || acc.status === 'revoked') && <Button variant="secondary" loading={busy === 'reconnect'} onClick={async () => { setBusy('reconnect'); try { const { url } = await api('/auth/google?format=json'); window.location.href = url; } catch (e: any) { toast(e.message, 'bad'); setBusy(''); } }} icon={<GoogleMark />}>Reconnect Google</Button>}
                 {data.reviewLink && <a href={data.reviewLink} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-white px-4 text-sm font-medium hover:border-brand-200">Review link <ExternalLink className="h-3.5 w-3.5" /></a>}
                 {acc.mode === 'live' && acc.status !== 'needs_location' && <Button variant="secondary" loading={busy === 'sync'} onClick={() => action('sync', () => api('/google/sync', { method: 'POST' }), (r) => `${r.created} new of ${r.total} reviews`)} icon={<RefreshCw className="h-4 w-4" />}>Check for reviews</Button>}
                 {acc.mode === 'demo' && data.googleConfigured && <Button loading={busy === 'live'} onClick={async () => { setBusy('live'); try { const { url } = await api('/auth/google?format=json'); window.location.href = url; } catch (e: any) { toast(e.message, 'bad'); setBusy(''); } }} icon={<GoogleMark />}>Connect real profile</Button>}
@@ -287,7 +302,7 @@ function GoogleInner() {
           </Panel>
 
           {acc.status === 'needs_location' ? (
-            <LocationPicker onDone={changed} />
+            <LocationPicker onDone={changed} lastError={acc.lastError} lastErrorDetails={acc.lastErrorDetails} />
           ) : (
             <>
               <SyncTable onChanged={changed} />

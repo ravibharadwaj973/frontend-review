@@ -46,6 +46,7 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { user, business, logout } = useAuth();
   const { data: counts } = useSWR('/reviews?limit=1', { refreshInterval: 60_000 });
   const { data: google } = useSWR('/google/status');
+  const googleConnected = google?.account?.mode === 'live' && google.account.status === 'connected' && !!google.account.locationName;
   const unanswered = counts?.counts?.unanswered ?? 0;
 
   return (
@@ -57,8 +58,8 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <div className="mx-3 mb-5 rounded-xl bg-white/[0.06] px-3 py-3">
         <p className="truncate font-display text-[15px] font-semibold text-white">{business?.name || '—'}</p>
         <p className="mt-0.5 flex items-center gap-1.5 text-xs text-brand-200">
-          <span className={cx('h-1.5 w-1.5 rounded-full', google?.account ? (google.account.mode === 'demo' ? 'bg-star' : 'bg-[#5BD49A]') : 'bg-brand-400')} />
-          {google?.account ? (google.account.mode === 'demo' ? 'Demo Google connection' : 'Google connected') : 'Google not connected'}
+          <span className={cx('h-1.5 w-1.5 rounded-full', googleConnected ? 'bg-[#5BD49A]' : google?.account ? 'bg-star' : 'bg-brand-400')} />
+          {google?.account ? (google.account.mode === 'demo' ? 'Demo Google connection' : googleConnected ? 'Google connected' : google.account.lastError || google.account.status === 'revoked' || google.account.status === 'error' ? 'Google needs attention' : 'Choose Google location') : 'Google not connected'}
         </p>
       </div>
 
